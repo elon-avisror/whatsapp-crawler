@@ -1,0 +1,9 @@
+{
+  "msg": "שלום עולם",
+  "msg_id": "md-5(msg + sender_id + time) encryption",
+  "ts": "0123456789012",
+  "sender_id": "+972503006092",
+  "group_name": "WhatsApp Crawler",
+  "group_creation_time": "11/12/2016 13:50",
+  "reference_msg_id": "md-5(msg + sender_id + time) encryption"
+}

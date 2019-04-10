@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../public/validation_style.css">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet">
+    <!-- <script src="../extention/v1.0/jquery-3.3.1.min.js"></script> -->
+    <script src="../public/validate.js"></script>
+
+    <title>please confirm the data</title>
+</head>
+
+<body>
+    <main>
+        <div class="main_title_wrap">
+            <div class="main_title">
+                אנא אשר את תקינות הפרטים
+            </div>
+        </div>
+        <div class="original_msg">
+            :ההודעה המקורית
+        </div>
+        <div class="msg_wrap">
+            <div  id="msg_text" class="msg_text" type="text" name="msg_text" value=""></div>
+            <hr class="line"></hr>
+            <div class="sender_date">
+                <span class="mark1">מאת:</span>
+                <span id="sender" type="text" name="sender" value=""></span>
+                <span class="mark1 d">בתאריך:</span>
+                <span id="date" type="text" name="date" value=""></span>
+            </div>
+            <div class="group_wrap">
+                <span class="group" id="group_name" type="text" name="group_name" value=""></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="second_title">
+            :המערכת זיהתה את הנתונים הבאים
+        </div>
+        <form id="form" onsubmit="return validateForm()" >
+            <input hidden name="msg_id" id="msg_id"/> 
+            <input hidden name="text" id="text"/> 
+            <input hidden name="sender_id" id="sender_id"/> 
+            <input hidden name="group_id" id="group_id"/> 
+            <div class="little_title">
+                גורם מטפל            </div>
+            <div class="receiver_wrap">
+                <input id="receiver" class="receiver" type="text" name="receiver" required>
+            </div>
+            <div class="little_title">
+                נושא ההודעה
+            </div>
+            <section class="issue-section"></section>
+            <div class="little_title">
+                תת נושא ההודעה
+            </div>
+            <section class="sub_issue-section"></section>
+            <div class="little_title">
+                הלקוח עליו מדובר בהודעה
+            </div>            
+            <section class="customer-section"></section>
+            <div class="submit_wrap">
+                <div class="submit_inner_wrap">
+                    <input class="submit" type="submit" value="הפרטים נכונים">
+                    <img class="vi" src="../views/vi.png"></img>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>

@@ -1,0 +1,18 @@
+{
+    "manifest_version": 2,
+    "name": "WhatsApp Crawler",
+    "version": "1.0.0",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [{
+        "matches": [
+            "https://web.whatsapp.com/"
+        ],
+        "js": ["jquery-3.3.1.min.js", "md5.js", "content.js"],
+        "run_at": "document_end"
+    }],
+    "browser_action": {
+        "default_icon": "bot.png"
+    }
+}
