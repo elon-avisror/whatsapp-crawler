@@ -7,4 +7,6 @@
 
 2. The purpose of the 3 parts, is for easy maintenance, privacy of our data and easily doing backup.
 
-*Made by Elon Avisror and Mahdi Asali*      \ ( ゜ o ゜)ノ
+3. *Made by Elon Avisror and Mahdi Asali* \ ( ゜ o ゜)ノ
+
+![GitHub Logo](/crawler_machine/logo.gif)
