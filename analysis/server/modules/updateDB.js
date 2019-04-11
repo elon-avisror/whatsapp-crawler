@@ -1,15 +1,12 @@
-updateGroupId =  function (data,callbackRes){
+updateGroupId = function(data, callbackRes) {
+  var erp = {
+    route: "call/updateGroupName",
+    old: data.old,
+    new: data.new,
+    created_time: data.group_creation_time
+  };
 
-
-        var erp = {
-               'route':'call/updateGroupName',
-               'old':data.old,
-               'new':data.new,
-               'created_time':data.group_creation_time
-    };
-
-
-    callbackRes(erp);
-}
+  callbackRes(erp);
+};
 
 exports.updateGroupId = updateGroupId;
