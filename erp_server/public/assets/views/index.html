@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../public/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="../public/download_to_csv.js"></script>  
+
+    <title>result page</title>
+</head>
+
+<body>
+    <main>
+        <nav>
+            <div class="topnav">    
+                <div class="date_wrap">  
+                    <select id="select_group" onchange="getTags()" class="select_group">
+                        <option value="" disabled selected>Select group</option>
+                    </select>  
+                    <input hidden class="since" name="since" id="since"/>   
+                    <input hidden class="until" name="until" id="until"/> 
+                    <input class="date"/>
+                    <button id="csv_btn" class="btn csv_btn" onclick="download_csv()" onfocus="changeStyle()" style="border: 2px solid rgba(176, 30, 50, 0.7); border-left: 0px; border-radius: 0;">ייצוא דו"ח מידע מאושר</button> 
+                </div>           
+            </div> 
+        </nav>
+        <section class="section-wrap">
+            <!-- <input class="search" type="text" placeholder="חיפוש" dir="rtl"></input> -->
+            <div class="loader_wrap"><div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+            <section class="messages-section"></section>
+        </section>
+    </main>
+
+    <script src="../public/index.js"></script>
+    <script>
+        $('.since').val(moment().subtract(1, 'days').format('MM/DD/YYYY'));
+        $('.until').val(moment().format('MM/DD/YYYY'));
+        $('input[class="date"]').daterangepicker({
+            //singleDatePicker: true,
+            startDate: moment().subtract(1, 'days'),
+            endDate: moment(),
+            locale:{
+                format: 'DD/MM/YYYY'
+            },
+            autoApply: true,
+            opens: 'left'
+        }, function(start, end, label) 
+        {
+            $(".since").val(start.format('MM/DD/YYYY'));
+            $('.until').val(end.format('MM/DD/YYYY'));
+        });
+    </script>
+</body>
+</html>
