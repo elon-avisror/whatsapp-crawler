@@ -20,7 +20,6 @@ const groupClassSelector = "._1wjpf";
 const groupDetailsClassSelector = "._1Iexl"; //'._2zCDG';
 const rightBarUnreadMessagesSelector = ".OUeyt";
 const searchHeaderSelector = "._1AKfk";
-wait;
 const groupCreatedDateSelector = "._3GoJv";
 const scrollButtomSelector = "._298R6";
 const messageTopSelector = ".Tkt2p";
