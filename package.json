@@ -1,0 +1,27 @@
+{
+  "name": "wac",
+  "version": "1.0.0",
+  "description": "1. The system include 3 main parts:     1. **crawler_machine** - running every X time we decide, his main part is to extract the information accurately and send it to the **analysis_server**. You can run it by execute: \"node crawler_machine/wac.js\" (notice: you must have node installed in your machine).     2. **analysis_server** - always listening, his two main parts are:         * Analyze the data, whose sended by the **crawler_machine** and transferred it to the **erp_server**.         * Ask for data from the **erp_server** to the **result page** (an html page).     3. **erp_server** - always listening, his duty is to save the data in the DB and analyzes the messages by requesting new messages for analysis (from time to time) from the **erp_server**.",
+  "main": "index.js",
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "express": "^4.16.4",
+    "nodemailer": "^6.1.0",
+    "puppeteer": "^1.14.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elonavisrur/wac.git"
+  },
+  "author": "EA & MA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elonavisrur/wac/issues"
+  },
+  "homepage": "https://github.com/elonavisrur/wac#readme"
+}

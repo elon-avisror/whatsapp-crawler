@@ -1,8 +1,8 @@
 {
-  "name": "crawler_machine",
+  "name": "erp_server",
   "version": "1.0.0",
   "description": "",
-  "main": "wac.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

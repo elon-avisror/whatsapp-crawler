@@ -32,13 +32,15 @@ app.use(allowCrossDomain);
 //Routes
 require("./routes")(app);
 
-var key = fs.readFileSync(config.httpsConfig.key);
-var cert = fs.readFileSync(config.httpsConfig.crt);
+//var key = fs.readFileSync(config.httpsConfig.key);
+//var cert = fs.readFileSync(config.httpsConfig.crt);
 
+/*
 const options = {
   key: key.toString("utf8"),
   cert: cert.toString("utf8")
 };
+*/
 
 http.listen(config.port, function() {
   console.log("App listening on port " + config.port + "!");

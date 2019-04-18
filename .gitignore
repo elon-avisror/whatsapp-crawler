@@ -1,0 +1,17 @@
+# WAC: all modules
+node_modules
+
+# Crawler: user_data_bn_*
+crawler_machine/user_data_bn_*
+
+# Analysis: configuration
+analysis_server/config.js
+
+# ERP: symfony/framework-bundle
+erp_server/.env
+erp_server/public/bundles/
+erp_server/var/
+erp_server/vendor/
+
+# ERP: symfony/web-server-bundle
+erp_server/.web-server-pid
