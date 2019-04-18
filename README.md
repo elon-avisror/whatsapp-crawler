@@ -18,16 +18,16 @@
 
 ## Installation
 
-### **_NodeJS_** installation at project directory (wac):
+### _NodeJS_ installation at project directory (wac)
 
-   1. **crawler_machine**:
-      1. npm install puppeteer
-      2. npm install nodemailer
-      3. npm install dateformat
-   2. **analysis_server**:
-      1. cp ../extra_info/wac_configuration/config.js analysis/config.js
-      2. npm install express
-      3. npm install request
+1. **crawler_machine**:
+   1. npm install puppeteer
+   2. npm install nodemailer
+   3. npm install dateformat
+2. **analysis_server**:
+   1. cp ../extra_info/wac_configuration/config.js analysis/config.js
+   2. npm install express
+   3. npm install request
 
 ## Processes
 
@@ -41,6 +41,6 @@
 
 3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
 
-### \*Made by **Elon Avisror & Mahdi Asali\*** \ ( ゜ o ゜)ノ
+### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 
 ![GitHub Logo](/crawler_machine/logo.gif)
