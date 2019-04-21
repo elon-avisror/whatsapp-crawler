@@ -1,5 +1,5 @@
-const URL = 'http://unidress.cambium.co.il:8080';
-//const URL = 'http://localhost:8080';  // download_to_csv
+//const URL = 'http://unidress.cambium.co.il:8080';
+const URL = 'http://localhost:8080';  // download_to_csv
 //const num = new Date().getTime() - 1000 * 60 * 60;
 const num = 10;
 console.log("num = " + num);
