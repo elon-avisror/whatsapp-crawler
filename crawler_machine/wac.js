@@ -43,7 +43,7 @@ const browserHeight = 1080 / 1.5;
 const isheadless = false;
 const checkForNewMessages = true;
 const checkReferenceMessage = true;
-const defaultNewMessagesNumber = 0; //TODO: change to default = 0
+const defaultNewMessagesNumber = 0; // TODO: change to default = 0
 const groupsJsonFile = "/groups.json";
 const QRfileURL = "http://unidress.cambium.co.il/assets/QR.png";
 const senderEmail = "unidress.cambium@gmail.com";
@@ -53,7 +53,7 @@ const toEmailAddress = "unidress.cambium@gmail.com";
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
 
-//global variables
+// global variables
 var browser = {};
 var page = {};
 var flickEvent = {};
@@ -71,8 +71,8 @@ var groupsArray = [];
 
   // setting chrome environment
   const browserOptions = {
-    headless: isheadless, //so we can scan the QR code
-    userDataDir: path.join(__dirname + userDataLocation + num), //so we can save session data from one run to another. full path due to a bug in headlesschrome
+    headless: isheadless, // so we can scan the QR code
+    userDataDir: path.join(__dirname + userDataLocation + num), // so we can save session data from one run to another. full path due to a bug in headlesschrome
     args: ["--no-sandbox"]
   };
 
@@ -95,7 +95,7 @@ var groupsArray = [];
     if (DEBUG) console.log("loading " + whatsappWebDomain);
     await page.goto(whatsappWebDomain);
 
-    //wait for class that appears only when logged in
+    // wait for class that appears only when logged in
     await loginCheck();
 
     console.log("END. Closing browser");
@@ -110,12 +110,12 @@ async function loginCheck() {
     await page.waitFor(searchbarSelector, {
       timeout: 15000
     });
-    //TODO: add try-catch for error handling
-    //TODO: handle the case of "whatsapp is open in another window"
-    //TODO: send the QR screenshot so we can scan it headless
+    // TODO: add try-catch for error handling
+    // TODO: handle the case of "whatsapp is open in another window"
+    // TODO: send the QR screenshot so we can scan it headless
     if (DEBUG) console.log("logged-in");
 
-    // Define a window.onCustomEvent function on the page.
+    // define a window.onCustomEvent function on the page.
     try {
       await page.exposeFunction("onCustomEvent", event => {
         if (
@@ -289,17 +289,17 @@ async function readGroup(groupName) {
       for (number in managementIndexes)
         await messages.splice(managementIndexes[number] - number, 1);
 
-      //generate messages enevelope
+      // generate messages enevelope
       messages = messages.reverse();
       messagesEnvelope = [];
       for (element of messages) {
-        //TODO: handle message in reply to another message
+        // TODO: handle message in reply to another message
         let envelope = await generateMessageEnvelope(
           groupName,
           groupCreatedDateString
         );
 
-        //check if it is the last message
+        // check if it is the last message
         if (envelope.msg_id && envelope.msg_id == lastMessage_id) {
           lastMessageFound = true;
           break;
@@ -319,7 +319,7 @@ async function readGroup(groupName) {
 
     if (counter >= 300) throw Error("last message id not found");
 
-    //pass messages
+    // pass messages
     for (element of messagesEnvelope) {
       await sendMessage(element);
     }
@@ -362,18 +362,18 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
   envelope.group_name = groupName;
   envelope.group_creation_time = groupCreatedDateString;
 
-  //check if the message has text and wasn't deleted
+  // check if the message has text and wasn't deleted
   try {
     await page.evaluate(
       (el, selector) => el.querySelector(selector).innerHTML,
       element,
       messageTopSelector
-    ); //message is just text
+    ); // message is just text
     await page.evaluate(
       (el, selector) => el.querySelector(selector).innerText,
       element,
       messageSelector
-    ); //massage wasn't deleted
+    ); // massage wasn't deleted
   } catch (e) {
     try /* picture */ {
       await page.evaluate(
@@ -409,7 +409,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     .update(envelope.msg + envelope.sender_id + envelope.ts)
     .digest("hex");
 
-  //response to message
+  // response to message
   envelope.reference_msg_id = "";
   if (checkReferenceMessage) {
     try {
@@ -419,7 +419,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
         messageQuotedSelector
       );
     } catch (e) {
-      return envelope; //message is not a response to another message
+      return envelope; // message is not a response to another message
     }
     let reference_msg_sender_id = await page.evaluate(
       (el, selector) => el.querySelectorAll(selector)[1].innerText,
@@ -430,8 +430,8 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
       .replace(/-/g, "")
       .replace(/ /g, "");
 
-    // For find reference message timestamp
-    // Attach an mutation listener to page to capture a custom event on page element style change
+    // for find reference message timestamp
+    // attach an mutation listener to page to capture a custom event on page element style change
     function listenFor() {
       return page.evaluate(() => {
         var mutationObserver = new MutationObserver(function(mutations) {
@@ -456,7 +456,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     }
     await listenFor();
 
-    //find the element in the DOM
+    // find the element in the DOM
     var elementSelector = "[data-pre-plain-text = '" + metadata + "']";
     const currentElementOuterHTML = await page.evaluate(
       el => el.outerHTML,
@@ -468,13 +468,13 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
         currentElementOuterHTML
       );
     } catch (
-      e //not found
+      e // not found
     ) {
       if (DEBUG) console.log("\x1b[33m%s\x1b[0m", e.message);
       return envelope;
     }
 
-    //click on the inner message to cause the page move to the message first occurrence and to flicker
+    // click on the inner message to cause the page move to the message first occurrence and to flicker
     await page.evaluate(
       (el, selector) => el.querySelector(selector).click(),
       elementInDOM,
@@ -492,13 +492,13 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     });
 
     if (!waitToFlickPromise) {
-      //not flick
+      // not flick
       if (DEBUG)
         console.log("\x1b[33m%s\x1b[0m", "reference message was deleted");
       return await envelope;
     }
 
-    //get inner message timestamp
+    // get inner message timestamp
     var innerMessageHTML = await flickEvent.target;
     var startIndex =
       (await innerMessageHTML.indexOf("data-pre-plain-text")) + 22;
@@ -528,29 +528,29 @@ async function getMessageText(el, selector) {
 
   let emojis = textElement.querySelectorAll("img");
   if (emojis.length == 0)
-    //no emojis
+    // no emojis
     message = textElement.innerText;
-  //there is emoji
+  // there is emoji
   else {
     let elementList = textElement.firstChild.childNodes;
     for (var child of elementList) {
       if (!child.tagName)
-        //TEXT
+        // TEXT
         message += child.textContent;
       else if (child.tagName == "IMG") {
         let emoji = child.getAttribute("alt");
 
         if (emoji == "👍" || emoji == "👍🏻")
-          //like yellow or light
+          // like yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e740-64.png' style='width:20px; height:20px'>";
         else if (emoji == "👎" || emoji == "👎🏻")
-          //dislike yellow or light
+          // dislike yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e746-64.png' style='width:20px; height:20px'>";
         else message += "<>";
       } else if (child.tagName == "SPAN") {
-        //the message is just 1 or 2 emojis
+        // the message is just 1 or 2 emojis
         let src = child.firstChild.getAttribute("src");
         message +=
           "<img src='https://web.whatsapp.com" +
@@ -560,7 +560,7 @@ async function getMessageText(el, selector) {
     }
   }
 
-  //multi line
+  // multi-line
   message = message
     .replace(/\n\n/g, "\n")
     .replace(/ \n/g, "\n")
@@ -575,24 +575,24 @@ async function getInCommentText(el, selector) {
 
   let emojis = textElement.querySelectorAll("img");
   if (emojis.length == 0)
-    //no emojis
+    // no emojis
     message = textElement.innerText;
-  //there is emoji
+  // there is emoji
   else {
     let elementList = textElement.childNodes;
     for (var child of elementList) {
       if (!child.tagName)
-        //TEXT
+        // TEXT
         message += child.textContent;
       else if (child.tagName == "IMG") {
         let emoji = child.getAttribute("alt");
 
         if (emoji == "👍" || emoji == "👍🏻")
-          //like yellow or light
+          // like yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e740-64.png' style='width:20px; height:20px'>";
         else if (emoji == "👎" || emoji == "👎🏻")
-          //dislike yellow or light
+          // dislike yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e746-64.png' style='width:20px; height:20px'>";
         else message += "<>";
@@ -600,7 +600,7 @@ async function getInCommentText(el, selector) {
     }
   }
 
-  //multi line
+  // multi-line
   message = message
     .replace(/\n\n/g, "\n")
     .replace(/ \n/g, "\n")
@@ -627,7 +627,7 @@ async function getMsgTimestamp(metadata) {
 async function findElementInDOM(elementSelector, currentElementOuterHTML) {
   if (DEBUG) console.log("search element");
 
-  //click to scroll to buttom
+  // click to scroll to buttom
   try {
     await page.waitFor(scrollButtomSelector, { timeout: 3000 }); //TODO: add try-catch for error handling
     await page.click(scrollButtomSelector);
@@ -657,7 +657,7 @@ async function findElementInDOM(elementSelector, currentElementOuterHTML) {
       }
     }
 
-    //scroll up to get more messages
+    // scroll up to get more messages
     await page.evaluate(selector => {
       document.querySelector(selector).scrollTo(0, 0);
     }, mainViewSelector);
@@ -710,7 +710,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
 }
 
 async function sendMessage(json) {
-  //TODO: create new group when the group unknown
+  // TODO: create new group when the group unknown
   let options = {
     host: "unidress.cambium.co.il",
     path: "/classifyMsg",
@@ -745,12 +745,12 @@ async function sendMessage(json) {
 }
 
 async function getValidationLinks() {
-  //handle with dialog window - leave site to send more messages
+  // handle with dialog window - leave site to send more messages
   page.on("dialog", async dialog => {
     await dialog.accept();
   });
 
-  //request - get validation links and phone numbers
+  // request - get validation links and phone numbers
   let options = {
     host: "unidress.cambium.co.il",
     path: "/getValidationLinks",
@@ -770,23 +770,23 @@ async function getValidationLinks() {
       validationLinks = JSON.parse(validationLinks);
 
       for (var message of validationLinks) {
-        //got to send message link
+        // got to send message link
         await page.goto(sendWhatsappWeb + message.sendto.substr(1));
         try {
-          /* //wait for class that appears only when navigate success
+          /* wait for class that appears only when navigate success
                     await page.waitFor(messageButtonSelector, { timeout: 15000 });
                     if (DEBUG) console.log('navigate ',sendWhatsappWeb+message.sendto.substr(1),' success');
                
-                    await page.click(messageButtonSelector);*/
+                    await page.click(messageButtonSelector); */
 
-          //wait for class that appears only when the navigation into chat success
+          // wait for class that appears only when the navigation into chat success
           await page.waitFor(typeMessageSelector, { timeout: 15000 });
 
           //typing the message
           await page.click(typeMessageSelector, { clickCount: 3 });
           await page.type(typeMessageSelector, message.link);
 
-          //send it
+          // send it
           try {
             await page.waitFor(linkSelector, { timeout: 5000 }); //TODO: check the selector
           } catch (e) {}
@@ -813,7 +813,7 @@ async function getValidationLinks() {
 async function readMessagesAccordingToNewMessagesNumber(groupName) {
   let newMessagesNumber = defaultNewMessagesNumber;
   if (checkForNewMessages) {
-    //check if there are new messages
+    // check if there are new messages
     let newMessagesIcon = await page.$(rightBarUnreadMessagesSelector);
     if (newMessagesIcon)
       newMessagesNumber = await page.$eval(

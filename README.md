@@ -18,7 +18,7 @@
 
 ## Installation
 
-### _NodeJS_ installation at project directory (wac)
+_NodeJS_ installation at project directory (wac)
 
 1. **crawler_machine**:
    1. npm install puppeteer
@@ -28,6 +28,12 @@
    1. cp ../extra_info/wac_configuration/config.js analysis/config.js
    2. npm install express
    3. npm install request
+   4. npm install pm2
+
+_PHP_ installation at erp_server directory
+
+1. **erp_server**:
+   - composer install
 
 ## Processes
 
@@ -40,6 +46,10 @@
    - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
 
 3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
+
+## TODO
+
+1. analysis_server/tagger/tagger file??? (DELETE)
 
 ### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 
