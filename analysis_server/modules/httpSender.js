@@ -1,7 +1,7 @@
 var request = require("request");
 var config = require("../config");
 
-exports.httpCall = function(data, callback) {
+exports.httpCall = function (data, callback) {
   var url = config.url;
   var route = data.route;
   var activate_debugger = "";
@@ -16,7 +16,7 @@ exports.httpCall = function(data, callback) {
   };
 
   console.log(options);
-  request(options, function(err, httpResponse, body) {
+  request(options, function (err, httpResponse, body) {
     console.log(body);
     var body = JSON.parse(body);
     callback(body);
