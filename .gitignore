@@ -1,16 +1,20 @@
 # WAC: all modules
-node_modules
 .idea
-erp_server/.idea
+node_modules
 
 # Crawler: user_data_bn_*
 crawler_machine/user_data_bn_*
 
 # Analysis: configuration
 analysis_server/config.js
+analysis_server/domain.crt
+analysis_server/domain.key
 
 # ERP: symfony/framework-bundle
+erp_server/.idea
 erp_server/.env
+erp_server/.env.dist
+erp_server/symfony.lock
 erp_server/public/bundles/
 erp_server/var/
 erp_server/vendor/

@@ -30,7 +30,8 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - npm install request
    - npm install pm2
 3. **erp_server** (_PHP_):
-   - [installation guide](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
+   - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
+   - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
    - composer install
 
 ## Processes
@@ -38,6 +39,8 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
 On air, we use pm2 (as service for all servers and machines)
 
 1. **_PHP_** - **erp_server** listening always as apache server, needs to run before other applications (black box), via commands (all commands will do with permission "sudo"):
+
+    Linux
 
     - cd /etc/apache2/sites-available/
     - sudo cp 000-default.conf wac.conf
@@ -47,9 +50,9 @@ On air, we use pm2 (as service for all servers and machines)
 
                  ServerName wac.local
                  ServerAdmin webmaster@localhost
-                 DocumentRoot /home/elon/projects/wac/wac/erp_server/public/
+                 DocumentRoot {PROJECT_DIRECTORY}/erp_server/public/
 
-                 <Directory /home/elon/projects/wac/wac/erp_server/public/>
+                 <Directory {PROJECT_DIRECTORY}/erp_server/public/>
                         Options Indexes FollowSymLinks
                         AllowOverride All
                         Require all granted
@@ -67,13 +70,41 @@ On air, we use pm2 (as service for all servers and machines)
     - sudo service apache2 restart
     - sudo nano /etc/hosts:
 
-            127.0.0.1 wac.local
+            127.0.0.1   wac.local
+
+    Windows
+
+    - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file and add:
+
+            <VirtualHost *:80>
+
+                 ServerName wac.local
+                 ServerAdmin webmaster@localhost
+                 DocumentRoot {PROJECT_DIRECTORY}/erp_server/public/
+
+                 <Directory {PROJECT_DIRECTORY}/erp_server/public/>
+                        Options Indexes FollowSymLinks
+                        AllowOverride All
+                        Require all granted
+                 </Directory>
+
+                 # Available loglevels: trace8, ..., trace1, debug, info, notice, warn, error, crit, alert, emerg.
+                 # It is also possible to configure the loglevel for particular modules, e.g.
+                 LogLevel debug
+                 #ErrorLog ${APACHE_LOG_DIR}/wac/error.log
+                 #CustomLog ${APACHE_LOG_DIR}/wac/access.log combined
+
+            </VirtualHost>
+
+    - copy a shortcut of C:\Windows\System32\drivers\etc\hosts file, and edit that file (with Administrator Permissions) and add:
+
+            127.0.0.1   wac.local
 
 2. **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
 
-   - if exists, enter the apllication.
-   - others, needs to add by the developer (at first time).
-   - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
+    - if exists, enter the apllication.
+    - others, needs to add by the developer (at first time).
+    - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
 
 3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
 
