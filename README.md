@@ -77,10 +77,6 @@ On air, we use pm2 (as service for all servers and machines)
 
 3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
 
-## TODO
-
-1. analysis_server/tagger/tagger file??? (DELETE)
-
 ### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 
 ![GitHub Logo](/crawler_machine/logo.gif)

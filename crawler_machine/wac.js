@@ -148,7 +148,7 @@ async function loginCheck() {
         await console.log("\x1b[36m%s\x1b[0m", "all groups were readen");
 
       // send validate messages
-      await getValidationLinks();
+      // await getValidationLinks();
 
       await page.waitFor(600000); // every 10 minutes
     }

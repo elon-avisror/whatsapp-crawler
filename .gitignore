@@ -6,8 +6,6 @@ crawler_machine/user_data_bn_*
 
 # Analysis: configuration
 analysis_server/config.js
-analysis_server/domain.crt
-analysis_server/domain.key
 
 # ERP: symfony/framework-bundle
 erp_server/.env
