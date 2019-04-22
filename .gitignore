@@ -1,5 +1,7 @@
 # WAC: all modules
 node_modules
+.idea
+erp_server/.idea
 
 # Crawler: user_data_bn_*
 crawler_machine/user_data_bn_*

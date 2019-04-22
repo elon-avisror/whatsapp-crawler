@@ -25,7 +25,7 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - npm install nodemailer
    - npm install dateformat
 2. **analysis_server** (_NodeJS_):
-   - cp ../extra_info/wac_configuration/config.js analysis/config.js
+   - cp ../extra_info/configuration/config.js analysis_server/config.js
    - npm install express
    - npm install request
    - npm install pm2
