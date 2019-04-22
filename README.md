@@ -33,14 +33,18 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
    - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
    - composer install
+4. **other installation**:
+   - VSCode
+   - Postman
+   - MySQL Workbench
 
 ## Processes
 
 On air, we use pm2 (as service for all servers and machines)
 
-1. **_PHP_** - **erp_server** listening always as apache server, needs to run before other applications (black box), via commands (all commands will do with permission "sudo"):
+1.  **_PHP_** - **erp_server** listening always as apache server, needs to run before other applications (black box), via commands (all commands will do with permission "sudo"):
 
-    Linux
+    **_Linux_**
 
     - cd /etc/apache2/sites-available/
     - sudo cp 000-default.conf wac.conf
@@ -72,7 +76,7 @@ On air, we use pm2 (as service for all servers and machines)
 
             127.0.0.1   wac.local
 
-    Windows
+    **_Windows_**
 
     - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file and add:
 
@@ -100,13 +104,13 @@ On air, we use pm2 (as service for all servers and machines)
 
             127.0.0.1   wac.local
 
-2. **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
+2.  **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
 
     - if exists, enter the apllication.
     - others, needs to add by the developer (at first time).
     - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
 
-3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
+3.  **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
 
 ### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 
