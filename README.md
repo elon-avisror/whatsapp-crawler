@@ -32,7 +32,7 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
 3. **erp_server** (_PHP_):
    - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
    - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
-   - composer install
+   - composer install (in "erp_server" directory)
 4. **other installation**:
    - VSCode
    - Postman
