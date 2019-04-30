@@ -1,5 +1,6 @@
 # WAC: all modules
 .idea
+.vscode
 node_modules
 
 # Crawler: user_data_bn_*
