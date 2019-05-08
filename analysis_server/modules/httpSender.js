@@ -5,7 +5,7 @@ exports.httpCall = function (data, callback) {
   var url = config.url;
   var route = data.route;
   var activate_debugger = "";
-  activate_debugger = '?XDEBUG_SESSION_START=1';
+  //activate_debugger = '?XDEBUG_SESSION_START=1';
   var options = {
     url: url + route + activate_debugger,
     method: "POST",

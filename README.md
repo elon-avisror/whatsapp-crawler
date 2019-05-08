@@ -33,15 +33,10 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - cp ../extra_info/configuration/.env erp_server/.env
    - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
    - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
-<<<<<<< HEAD
    - composer install
    - [debugging with xdebug (Linux)](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
    - [debugging with xdebug (Windows)](https://xdebug.org/download.php)
 4. **others**:
-=======
-   - composer install (in "erp_server" directory)
-4. **other installation**:
->>>>>>> b510a121e775357508d8001add530703363dba45
    - VSCode
    - PhpStorm
    - MySQL Workbench
