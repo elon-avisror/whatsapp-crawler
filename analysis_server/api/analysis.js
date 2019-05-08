@@ -4,19 +4,19 @@ var httpSender = require("../modules/httpSender");
 var tagger = require("../modules/tagger");
 var validation = require("../modules/validation");
 
-exports.getTablesData = function () {
+exports.getTablesData = function() {
   return new Promise((resolve, reject) => {
     var group_data = {
       route: "admin/getTablesData"
     };
-    httpSender.httpCall(group_data, function (ans) {
+    httpSender.httpCall(group_data, function(ans) {
       //make http request
       resolve(ans);
     });
   });
 };
 
-exports.classifyMsg = function (req, res) {
+exports.classifyMsg = function(req, res) {
   //extract first word
   var msg = req.body.msg;
   var msgArray = msg.split(" ");
@@ -49,10 +49,10 @@ exports.classifyMsg = function (req, res) {
     if (contains_word) {
       // register as new call
       var call_type_id = is;
-      analyze.analyzeCall(req.body, call_type_id, function (ans) {
+      analyze.analyzeCall(req.body, call_type_id, function(ans) {
         if (ans.description != null) {
           //make http request
-          httpSender.httpCall(ans, function (answer) {
+          httpSender.httpCall(ans, function(answer) {
             if (typeof answer["new_message"] != "undefined") {
               // proceed to tagger only if this is new message
               tagger.extractTags(answer);
@@ -68,9 +68,9 @@ exports.classifyMsg = function (req, res) {
       });
     } else {
       //registear as regular msg
-      analyze.registerRegularMsg(req.body, function (ans) {
+      analyze.registerRegularMsg(req.body, function(ans) {
         if (ans.msg != null) {
-          httpSender.httpCall(ans, function (answer) {
+          httpSender.httpCall(ans, function(answer) {
             //make http request
             tagger.extractTags(answer);
             res.send(answer);
@@ -102,9 +102,9 @@ exports.classifyMsg = function (req, res) {
     }
     if (contains_word) {
       //comment on a call
-      analyze.analyzeComment(req.body, first_word, function (ans) {
+      analyze.analyzeComment(req.body, first_word, function(ans) {
         if (ans.msg != null) {
-          httpSender.httpCall(ans, function (answer) {
+          httpSender.httpCall(ans, function(answer) {
             //make http request
             tagger.extractTags(answer);
             res.send(answer);
@@ -118,9 +118,9 @@ exports.classifyMsg = function (req, res) {
       });
     } else {
       //registear as regular msg
-      analyze.registerRegularMsg(req.body, function (ans) {
+      analyze.registerRegularMsg(req.body, function(ans) {
         if (ans.msg != null) {
-          httpSender.httpCall(ans, function (answer) {
+          httpSender.httpCall(ans, function(answer) {
             //make http request
             tagger.extractTags(answer);
             res.send(answer);
@@ -136,16 +136,16 @@ exports.classifyMsg = function (req, res) {
   }
 };
 
-exports.changeGroupName = function (req, res) {
+exports.changeGroupName = function(req, res) {
   if (
     req.body.old != undefined &&
     req.body.new != undefined &&
     req.body.group_creation_time != undefined
   ) {
-    updateDB.updateGroupId(req.body, function (ans) {
+    updateDB.updateGroupId(req.body, function(ans) {
       //make http request
       if (ans.new != null) {
-        httpSender.httpCall(ans, function (answer) {
+        httpSender.httpCall(ans, function(answer) {
           res.send(answer);
         });
       } else {
@@ -159,7 +159,7 @@ exports.changeGroupName = function (req, res) {
   var data = req.body;
 };
 
-exports.getLastMsg = function (req, res) {
+exports.getLastMsg = function(req, res) {
   var group_data = {
     route: "call/getLastMsg",
     group: req.body.group,
@@ -167,7 +167,7 @@ exports.getLastMsg = function (req, res) {
   };
   //make http request
   if (group_data.group != null && group_data.group_creation_time != null) {
-    httpSender.httpCall(group_data, function (ans) {
+    httpSender.httpCall(group_data, function(ans) {
       res.send(ans);
     });
   } else {
@@ -178,7 +178,7 @@ exports.getLastMsg = function (req, res) {
   }
 };
 
-exports.setTag = function (data) {
+exports.setTag = function(data) {
   var tag_data = { route: "admin/setTag" };
   for (var i = 0; i < data.length; i++) {
     var D = data[i];
@@ -195,7 +195,7 @@ exports.setTag = function (data) {
 
   //make http request
   if (tag_data["0"].msg_id != null) {
-    httpSender.httpCall(tag_data, function (ans) {
+    httpSender.httpCall(tag_data, function(ans) {
       var msg_id = ans.msg_id;
       validation.validateTag(msg_id); //<----- VALIDATION
       return ans;
@@ -208,7 +208,7 @@ exports.setTag = function (data) {
   }
 };
 
-exports.getTags = function (req, res) {
+exports.getTags = function(req, res) {
   var tag_data = {
     route: "admin/getTags",
     ts: req.body.ts,
@@ -216,7 +216,7 @@ exports.getTags = function (req, res) {
   };
   //make http request
   if (tag_data.ts != null && tag_data.group_name != null) {
-    httpSender.httpCall(tag_data, function (ans) {
+    httpSender.httpCall(tag_data, function(ans) {
       res.send(ans);
     });
   } else {
@@ -227,27 +227,27 @@ exports.getTags = function (req, res) {
   }
 };
 
-exports.parseSCV = function (req, res) {
+exports.parseSCV = function(req, res) {
   var parse_data = {
     route: "admin/parseSCV"
   };
-  httpSender.httpCall(parse_data, function (ans) {
+  httpSender.httpCall(parse_data, function(ans) {
     //make http request
     res.send(ans);
   });
 };
 
-exports.getValidationLinks = function (req, res) {
+exports.getValidationLinks = function(req, res) {
   var data = {
     route: "admin/getValidationLinks"
   };
-  httpSender.httpCall(data, function (ans) {
+  httpSender.httpCall(data, function(ans) {
     //make http request
     res.send(ans);
   });
 };
 
-exports.Data_Validated = function (req, res) {
+exports.Data_Validated = function(req, res) {
   console.log(req);
   var data = req.query;
   console.log(data);
@@ -269,35 +269,35 @@ exports.Data_Validated = function (req, res) {
     group_id: data.group_id,
     ts: Date.now()
   };
-  httpSender.httpCall(data, function (ans) {
+  httpSender.httpCall(data, function(ans) {
     //make http request
     res.send(ans);
   });
 };
 
-exports.getDataToValidateByMsgId = function (req, res) {
+exports.getDataToValidateByMsgId = function(req, res) {
   var data = {
     route: "admin/getDataToValidateByMsgId",
     msg_id: req.body.msg_id
   };
-  httpSender.httpCall(data, function (ans) {
+  httpSender.httpCall(data, function(ans) {
     //make http request
     res.send(ans);
   });
 };
 
-exports.getEntity = function (req, res) {
+exports.getEntity = function(req, res) {
   var data = {
     route: "admin/getEntity",
     entity: req.body.entity
   };
-  httpSender.httpCall(data, function (ans) {
+  httpSender.httpCall(data, function(ans) {
     //make http request
     res.send(ans);
   });
 };
 
-exports.getValidated_data = function (req, res) {
+exports.getValidated_data = function(req, res) {
   if (
     typeof req.body.since != "undefined" &&
     typeof req.body.until != "undefined" &&
@@ -309,7 +309,7 @@ exports.getValidated_data = function (req, res) {
       until: req.body.until,
       group_name: req.body.group_name
     };
-    httpSender.httpCall(data, function (ans) {
+    httpSender.httpCall(data, function(ans) {
       //make http request
       res.send(ans);
     });
@@ -318,12 +318,12 @@ exports.getValidated_data = function (req, res) {
   }
 };
 
-exports.getWAGroups = function (req, res) {
+exports.getWAGroups = function(req, res) {
   if (true) {
     var data = {
       route: "admin/getWAGroups"
     };
-    httpSender.httpCall(data, function (ans) {
+    httpSender.httpCall(data, function(ans) {
       //make http request
       res.send(ans);
     });

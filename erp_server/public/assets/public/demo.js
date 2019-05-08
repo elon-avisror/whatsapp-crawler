@@ -99,7 +99,7 @@ function getTags()
 
         for (var element in data) 
         {
-            if (data[element].groupData.group_name == "WhatsApp Crawler 2" || data[element].groupData.group_name == "הכרת מערכת הוואטסאפ")
+            if (data[element].groupData.group_name == "WhatsApp Crawler 2" || data[element].groupData.group_name == "הכרת מערכת הוואטסאפ" || data[element].groupData.group_name == "פאנדנגו נהגים" )
             {
                 // initialize
                 var dateString = msg = msg_id = sender_id = group_name = tags = tag = text = mark = text_probability = ref_msg_id = ref_msg_text = issue = receiver = status = "";
