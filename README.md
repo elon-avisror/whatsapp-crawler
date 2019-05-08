@@ -30,25 +30,29 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - npm install request
    - npm install pm2
 3. **erp_server** (_PHP_):
+   - cp ../extra_info/configuration/.env erp_server/.env
    - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
    - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
    - composer install
-4. **other installation**:
+   - [debugging with xdebug (Linux)](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
+   - [debugging with xdebug (Windows)](https://xdebug.org/download.php)
+4. **others**:
    - VSCode
-   - Postman
+   - PhpStorm
    - MySQL Workbench
+   - Postman
 
 ## Processes
 
 On air, we use pm2 (as service for all servers and machines)
 
-1.  **_PHP_** - **erp_server** listening always as apache server, needs to run before other applications (black box), via commands (all commands will do with permission "sudo"):
+1. **_PHP_** - **erp_server** listening always as apache server, needs to run before other applications (black box), via commands (all commands will do with permission "sudo"):
 
     **_Linux_**
 
-    - cd /etc/apache2/sites-available/
-    - sudo cp 000-default.conf wac.conf
-    - sudo nano wac.conf:
+        - cd /etc/apache2/sites-available/
+        - sudo cp 000-default.conf wac.conf
+        - sudo nano wac.conf:
 
             <VirtualHost \*:80>
 
@@ -63,22 +67,22 @@ On air, we use pm2 (as service for all servers and machines)
                  </Directory>
 
                  # Available loglevels: trace8, ..., trace1, debug, info, notice, warn, error, crit, alert, emerg.
-                 # It is also possible to configure the loglevel for particular modules, e.g.
+                 # It is also installation possible to configure the loglevel for particular modules, e.g.
                  LogLevel debug
                  #ErrorLog ${APACHE_LOG_DIR}/wac/error.log
                  #CustomLog ${APACHE_LOG_DIR}/wac/access.log combined
 
             </VirtualHost>
 
-    - sudo a2ensite wac.conf
-    - sudo service apache2 restart
-    - sudo nano /etc/hosts:
+        - sudo a2ensite wac.conf
+        - sudo service apache2 restart
+        - sudo nano /etc/hosts:
 
             127.0.0.1   wac.local
 
     **_Windows_**
 
-    - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file and add:
+        - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file and add:
 
             <VirtualHost *:80>
 
@@ -100,17 +104,21 @@ On air, we use pm2 (as service for all servers and machines)
 
             </VirtualHost>
 
-    - copy a shortcut of C:\Windows\System32\drivers\etc\hosts file, and edit that file (with Administrator Permissions) and add:
+        - copy a shortcut of C:\Windows\System32\drivers\etc\hosts file, and edit that file (with Administrator Permissions) and add:
 
             127.0.0.1   wac.local
 
-2.  **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
+2. **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
 
-    - if exists, enter the apllication.
-    - others, needs to add by the developer (at first time).
-    - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
+        - if exists, enter the apllication.
+        - others, needs to add by the developer (at first time).
+        - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
 
-3.  **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
+3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
+
+## Configuration
+
+1. .env file
 
 ### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 

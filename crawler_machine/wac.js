@@ -45,10 +45,10 @@ const checkForNewMessages = true;
 const checkReferenceMessage = true;
 const defaultNewMessagesNumber = 0; // TODO: change to default = 0
 const groupsJsonFile = "/groups.json";
-const QRfileURL = "http://unidress.cambium.co.il/assets/QR.png";
-const senderEmail = "unidress.cambium@gmail.com";
-const senderPassword = "unidress";
-const toEmailAddress = "unidress.cambium@gmail.com";
+const QRfileURL = "127.0.0.1/assets/QR.png";
+//const senderEmail = "unidress.cambium@gmail.com";
+//const senderPassword = "unidress";
+//const toEmailAddress = "unidress.cambium@gmail.com";
 
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
@@ -148,7 +148,7 @@ async function loginCheck() {
         await console.log("\x1b[36m%s\x1b[0m", "all groups were readen");
 
       // send validate messages
-      // await getValidationLinks();
+      //await getValidationLinks();
 
       await page.waitFor(600000); // every 10 minutes
     }
@@ -170,8 +170,8 @@ async function loginCheck() {
     await page.screenshot({
       path: path.join(__dirname + QRfileLocation)
     });
-    await sendEmail();
-    await page.waitFor(300000); // time for check email and login - 5 minutes
+    //await sendEmail();
+    //await page.waitFor(300000); // time for check email and login - 5 minutes
     await loginCheck();
   }
 }
@@ -672,7 +672,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
   var responseString;
   var p = new Promise((resolve, reject) => {
     let options = {
-      host: "unidress.cambium.co.il",
+      host: "127.0.0.1",
       path: "/getLastMsg",
       method: "POST",
       port: 8080,
@@ -712,7 +712,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
 async function sendMessage(json) {
   // TODO: create new group when the group unknown
   let options = {
-    host: "unidress.cambium.co.il",
+    host: "127.0.0.1",
     path: "/classifyMsg",
     method: "POST",
     port: 8080,
@@ -752,7 +752,7 @@ async function getValidationLinks() {
 
   // request - get validation links and phone numbers
   let options = {
-    host: "unidress.cambium.co.il",
+    host: "127.0.0.1",
     path: "/getValidationLinks",
     method: "POST",
     port: 8080,
