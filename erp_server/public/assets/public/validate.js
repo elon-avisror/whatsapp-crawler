@@ -1,6 +1,6 @@
 
-const URL = 'http://unidress.cambium.co.il:8080';
-//const URL = 'http://localhost:8080';
+//const URL = 'http://unidress.cambium.co.il:8080';
+const URL = 'http://localhost:8080';
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);

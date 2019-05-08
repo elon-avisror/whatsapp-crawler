@@ -34,7 +34,7 @@ module.exports = function(app) {
   });
 
   app.get("/test", function(req, res, next) {
-    res.send("hi");
+    res.send("WAC says hi!");
   });
 
   app.post("/getLastMsg", function(req, res, next) {

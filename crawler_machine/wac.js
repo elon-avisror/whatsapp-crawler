@@ -8,13 +8,15 @@ var dateFormat = require("dateformat");
 const EventEmitter = require("events");
 
 const DEBUG = true;
+const HOST = '127.0.0.1';
+const FIRST_TIME_GROUP = true;
 
 // hard coded strings and settings
 const searchbarSelector = ".jN-F5";
 const whatsappWebDomain = "https://web.whatsapp.com";
 const sendWhatsappWeb = "https://web.whatsapp.com/send?phone=";
 var userDataLocation = "/user_data_bn_";
-const QRfileLocation = "/../erp_server/the_spacebar/public/assets/QR.png";
+const QRfileLocation = "/../erp_server/public/assets/QR.png";
 const QRreloadSelector = ".HnNfm";
 const groupClassSelector = "._1wjpf";
 const groupDetailsClassSelector = "._1Iexl"; //'._2zCDG';
@@ -46,12 +48,12 @@ const checkReferenceMessage = true;
 const defaultNewMessagesNumber = 0; //TODO: change to default = 0
 const groupsJsonFile = "/groups.json";
 const QRfileURL = "http://wac.local/assets/QR.png";
-//const senderEmail = "unidress.cambium@gmail.com";
-//const senderPassword = "unidress";
-//const toEmailAddress = "unidress.cambium@gmail.com";
+const senderEmail = "aelon@cambium.co.il";
+const senderPassword = "Elon9890";
+const toEmailAddress = "aelon@cambium.co.il";
 const minute = 60000;
 const loopInterval = minute * 10; // every 10 minutes
-const waitBeforeCheckEmail = minute * 5; // 5 min
+const waitBeforeCheckEmail = minute * 1; // 5 min
 
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
@@ -178,8 +180,8 @@ async function loginCheck() {
     await page.screenshot({
       path: path.join(__dirname + QRfileLocation)
     });
-    //await sendEmail();
-    //await page.waitFor(waitBeforeCheckEmail); // time for check email and login - 5 minutes
+    await sendEmail();
+    await page.waitFor(waitBeforeCheckEmail); // time for check email and login - 5 minutes
     await loginCheck();
   }
 }
@@ -257,6 +259,7 @@ async function readGroup(groupName) {
       );
 
     // get last message id
+    if (!FIRST_TIME_GROUP) {
     var lastMessageData = await getLastMessage(
       groupName,
       groupCreatedDateString
@@ -266,6 +269,7 @@ async function readGroup(groupName) {
       return;
     }
     var lastMessage_id = JSON.parse(lastMessageData).last_message.msg_id;
+  }
 
     // read relevant (last new) messages
     let lastMessageFound = false;
@@ -312,10 +316,12 @@ async function readGroup(groupName) {
         );
 
         //check if it is the last message
+        if (!FIRST_TIME_GROUP) {
         if (envelope.msg_id && envelope.msg_id == lastMessage_id) {
           lastMessageFound = true;
           break;
         }
+      }
 
         if (envelope.msg_id) {
           // the message is text and wasn't deleted
@@ -327,7 +333,7 @@ async function readGroup(groupName) {
       await page.evaluate(selector => {
         document.querySelector(selector).scrollTo(0, 0);
       }, mainViewSelector);
-    } while (!lastMessageFound && counter < 300);
+    } while (!FIRST_TIME_GROUP && !lastMessageFound && counter < 300);
 
     if (counter >= 300) throw Error("last message id not found");
 
@@ -689,7 +695,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
   var responseString;
   var p = new Promise((resolve, reject) => {
     let options = {
-      host: "unidress.cambium.co.il",
+      host: HOST,
       path: "/getLastMsg",
       method: "POST",
       port: 8080,
@@ -734,7 +740,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
 async function sendMessage(json) {
   //TODO: create new group when the group unknown
   let options = {
-    host: "unidress.cambium.co.il",
+    host: HOST,
     path: "/classifyMsg",
     method: "POST",
     port: 8080,
@@ -774,7 +780,7 @@ async function getValidationLinks() {
 
   //request - get validation links and phone numbers
   let options = {
-    host: "unidress.cambium.co.il",
+    host: HOST,
     path: "/getValidationLinks",
     method: "POST",
     port: 8080,
