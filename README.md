@@ -28,14 +28,18 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - cp ../extra_info/configuration/config.js analysis_server/config.js
    - npm install express
    - npm install request
-   - npm install pm2
+   - npm install pm2 (add "-g" in production)
 3. **erp_server** (_PHP_):
    - cp ../extra_info/configuration/.env erp_server/.env
-   - [installation guide (Linux)](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
-   - [installation guide (Windows)](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
+   - [Apache installation guide for Linux](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
+   - [Apache installation guide for Windows](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
+   - [PHP installation guide for Linux](https://hostadvice.com/how-to/how-to-install-apache-mysql-php-on-an-ubuntu-18-04-vps/)
+   - [PHP installation guide for Windows](https://www.sitepoint.com/how-to-install-php-on-windows/)
+   - [Composer installation guide for Linux](https://www.ionos.com/community/hosting/php/install-and-use-php-composer-on-ubuntu-1604/)
+   - [Composer installation guide for Windows](https://www.jeffgeerling.com/blog/2018/installing-php-7-and-composer-on-windows-10)
    - composer install
-   - [debugging with xdebug (Linux)](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
-   - [debugging with xdebug (Windows)](https://xdebug.org/download.php)
+   - [Debugging with xdebug for Linux](http://www.dieuwe.com/blog/xdebug-ubuntu-1604-php7)
+   - [Debugging with xdebug for Windows](https://xdebug.org/download.php)
 4. **others**:
    - VSCode
    - PhpStorm
