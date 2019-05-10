@@ -8,7 +8,7 @@ var dateFormat = require("dateformat");
 const EventEmitter = require("events");
 
 const DEBUG = true;
-const HOST = '127.0.0.1';
+const HOST = "127.0.0.1";
 const FIRST_TIME_GROUP = true;
 
 // hard coded strings and settings
@@ -260,16 +260,16 @@ async function readGroup(groupName) {
 
     // get last message id
     if (!FIRST_TIME_GROUP) {
-    var lastMessageData = await getLastMessage(
-      groupName,
-      groupCreatedDateString
-    );
-    if (!lastMessageData) {
-      if (DEBUG) console.log("last message don't exist");
-      return;
+      var lastMessageData = await getLastMessage(
+        groupName,
+        groupCreatedDateString
+      );
+      if (!lastMessageData) {
+        if (DEBUG) console.log("last message don't exist");
+        return;
+      }
+      var lastMessage_id = JSON.parse(lastMessageData).last_message.msg_id;
     }
-    var lastMessage_id = JSON.parse(lastMessageData).last_message.msg_id;
-  }
 
     // read relevant (last new) messages
     let lastMessageFound = false;
@@ -317,11 +317,11 @@ async function readGroup(groupName) {
 
         //check if it is the last message
         if (!FIRST_TIME_GROUP) {
-        if (envelope.msg_id && envelope.msg_id == lastMessage_id) {
-          lastMessageFound = true;
-          break;
+          if (envelope.msg_id && envelope.msg_id == lastMessage_id) {
+            lastMessageFound = true;
+            break;
+          }
         }
-      }
 
         if (envelope.msg_id) {
           // the message is text and wasn't deleted
