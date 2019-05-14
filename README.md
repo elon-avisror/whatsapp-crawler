@@ -31,10 +31,10 @@ _NodeJS_ installation at project directory ("wac") and _PHP_ installation at "er
    - npm install pm2 (add "-g" in production)
 3. **erp_server** (_PHP_):
    - cp ../extra_info/configuration/.env erp_server/.env
-   - [Apache installation guide for Linux](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
-   - [Apache installation guide for Windows](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
-   - [PHP installation guide for Linux](https://hostadvice.com/how-to/how-to-install-apache-mysql-php-on-an-ubuntu-18-04-vps/)
-   - [PHP installation guide for Windows](https://www.sitepoint.com/how-to-install-php-on-windows/)
+   - [Apache2 installation guide for Linux](https://tecadmin.net/install-symfony-2-framework-on-ubuntu/)
+   - [Apache2 installation guide for Windows](https://seiler.it/installing-symfony-framework-into-xampp-for-windows/)
+   - [PHP7.1 installation guide for Linux](https://hostadvice.com/how-to/how-to-install-apache-mysql-php-on-an-ubuntu-18-04-vps/)
+   - [PHP7.1 installation guide for Windows](https://www.sitepoint.com/how-to-install-php-on-windows/)
    - [Composer installation guide for Linux](https://www.ionos.com/community/hosting/php/install-and-use-php-composer-on-ubuntu-1604/)
    - [Composer installation guide for Windows](https://www.jeffgeerling.com/blog/2018/installing-php-7-and-composer-on-windows-10)
    - composer install
@@ -54,9 +54,9 @@ On air, we use pm2 (as service for all servers and machines)
 
     **_Linux_**
 
-        - cd /etc/apache2/sites-available/
-        - sudo cp 000-default.conf wac.conf
-        - sudo nano wac.conf:
+    - cd /etc/apache2/sites-available/
+    - sudo cp 000-default.conf wac.conf
+    - sudo nano wac.conf (and edit to):
 
             <VirtualHost \*:80>
 
@@ -78,15 +78,15 @@ On air, we use pm2 (as service for all servers and machines)
 
             </VirtualHost>
 
-        - sudo a2ensite wac.conf
-        - sudo service apache2 restart
-        - sudo nano /etc/hosts:
+    - sudo a2ensite wac.conf
+    - sudo service apache2 restart
+    - sudo nano /etc/hosts (and add):
 
             127.0.0.1   wac.local
 
     **_Windows_**
 
-        - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file and add:
+    - copy a shortcut of C:\xampp\apache\conf\extra\httpd-vhosts.conf file, and edit that file edit to:
 
             <VirtualHost *:80>
 
@@ -108,21 +108,23 @@ On air, we use pm2 (as service for all servers and machines)
 
             </VirtualHost>
 
-        - copy a shortcut of C:\Windows\System32\drivers\etc\hosts file, and edit that file (with Administrator Permissions) and add:
+    - copy a shortcut of C:\Windows\System32\drivers\etc\hosts file, and edit that file (with Administrator Permissions) and add:
 
             127.0.0.1   wac.local
 
 2. **_NodeJS_** - node **crawler_machine**/wac.js --> run the whole application, first reading the QR.png:
 
-        - if exists, enter the apllication.
-        - others, needs to add by the developer (at first time).
-        - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
+    - if exists, enter the apllication.
+    - others, needs to add by the developer (at first time).
+    - finally, the app listening to groups in whatsapp and get sleep to 10 minutes (every reading).
 
 3. **_NodeJS_** - node **analysis_server**/app.js --> **analysis_server**/routes.js --> **analysis_server**/api/analysis.js --> **analysis_server**/modules/httpSender.js --> **erp_server**.
 
 ## Configuration
 
-1. .env file
+1. **erp_server**/.env file - in order to configurate the **erp_server**.
+2. **analysis_server**/config.js - in order to configurate the **analysis_server**.
+3. **crawler_machine**/wac.js - in HOST field, in order to configurate the **crawler_machine**.
 
 ### Made by _Elon Avisror & Mahdi Asali_ \ ( ゜ o ゜)ノ
 
