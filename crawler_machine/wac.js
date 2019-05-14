@@ -47,7 +47,7 @@ const checkForNewMessages = true;
 const checkReferenceMessage = true;
 const defaultNewMessagesNumber = 0; // TODO: change to default = 0
 const groupsJsonFile = "/groups.json";
-const QRfileURL = "http://wac.local/assets/QR.png";
+const QRfileURL = "http://whatsapp-crawler.com/assets/QR.png";
 const senderEmail = "aelon@cambium.co.il";
 const senderPassword = "Elon9890";
 const toEmailAddress = "aelon@cambium.co.il";
