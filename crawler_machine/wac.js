@@ -198,7 +198,7 @@ async function sendEmail() {
   var mailOptions = {
     from: senderEmail,
     to: toEmailAddress,
-    subject: "Click on the link to login whatsApp",
+    subject: "Click on the link to login WhatsApp",
     text: QRfileURL
   };
 
