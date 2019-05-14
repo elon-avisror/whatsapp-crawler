@@ -1,4 +1,4 @@
-const URL = 'http://unidress.cambium.co.il:8080';
+const URL = 'http://wac.local:8080';
 //const num = new Date().getTime() - 1000 * 60 * 60;
 const num = 10;
 console.log("num = " + num);
