@@ -42,7 +42,7 @@ const sendMessageSelector = "._35EW6";
 const linkSelector = '[class = grGJn][style = "height: 88px;"]';
 const browserWidth = 1920 / 1.5;
 const browserHeight = 1080 / 1.5;
-const isheadless = false;
+const isheadless = true;
 const checkForNewMessages = true;
 const checkReferenceMessage = true;
 const defaultNewMessagesNumber = 0; // TODO: change to default = 0
@@ -52,7 +52,7 @@ const senderEmail = "aelon@cambium.co.il";
 const senderPassword = "Elon9890";
 const toEmailAddress = "aelon@cambium.co.il";
 const minute = 60000;
-const loopInterval = minute * 10; // every 10 minutes
+const loopInterval = minute * 60; // every 10 minutes
 const waitBeforeCheckEmail = minute * 1; // 5 min
 
 class MyEmitter extends EventEmitter {}
