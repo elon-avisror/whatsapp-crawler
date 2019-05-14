@@ -1,17 +1,18 @@
-const URL = 'http://whatsapp-crawler.com:8080';
-const groupsJsonFile = "../../../../crawler_machine/groups.json";
+const URL = 'http://unidress.cambium.co.il:8080';
 //const URL = 'http://localhost:8080';  // download_to_csv
 //const num = new Date().getTime() - 1000 * 60 * 60;
 const num = 10;
 console.log("num = " + num);
 
 
-function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_id, ref_msg_text, ref_id, issue, receiver, status, dateString) {
+function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_id, ref_msg_text, ref_id, issue, receiver, status, dateString) 
+{
     let reference_structure = ``;
-    if (ref_msg_id) {
+    if(ref_msg_id)
+    {
         reference_structure = `<div class="wrap_ref">`;
-        if (status == "closed")
-            reference_structure = `<div class="wrap_ref close_ref">`;
+        if(status == "closed")
+            reference_structure = `<div class="wrap_ref close_ref">`;            
 
         reference_structure += `<div id="${ref_id}" class="reference">
                 <span class="ref_heading">בתגובה ל:</span>
@@ -22,15 +23,15 @@ function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_i
 
     let isOpen = '';
     if (tag)
-        isOpen = 'open';
+        isOpen='open';
 
-    let structure = `<details ` + isOpen + ` id="${msg_id}">`;
-    if (status == "close" && ref_msg_id)
-        structure = `<details ` + isOpen + ` id="${msg_id}" class="close_details">`;
+    let structure =`<details `+isOpen+` id="${msg_id}">`;
+    if(status == "close" && ref_msg_id)
+        structure = `<details `+isOpen+` id="${msg_id}" class="close_details">`;
     else if (status == "close" && !ref_msg_id)
-        structure = `<details ` + isOpen + ` id="${msg_id}" class="close_details_no_ref">`;
+        structure = `<details `+isOpen+` id="${msg_id}" class="close_details_no_ref">`;
     structure +=
-        `<summary class="summary">
+            `<summary class="summary">
                 <span class="message">הודעה:</span>
                 <span class="message_details">${msg}</span>
             </summary>   
@@ -47,7 +48,8 @@ function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_i
                 <span class="details hour_d">${dateString}</span> 
             </div>
             <hr>`;
-    if (issue || receiver) {
+    if (issue || receiver)
+    {
         structure +=
             `<div class="raw">
                 <span class="issue heading">סיווג:</span>
@@ -58,8 +60,8 @@ function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_i
             </div>
             <hr>`;
     }
-    structure +=
-        `<div class="raw">
+        structure +=
+            `<div class="raw">
                 <span class="tag heading">תגיות:</span>
                 <span class="tag details">${tag}</span>
             </div>
@@ -70,22 +72,25 @@ function messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_i
             </div>
         </details>`;
 
-    return structure + reference_structure;
+    return structure+reference_structure;
 }
 
-function getTags() {
+function getTags()
+{
     $(".loader_wrap").show();
 
-    var url = URL + "/getTags";
+    var url = URL+"/getTags";
     var group = $('#select_group').val();
     console.log(group);
 
-    var body = {
+    var body = 
+    {
         ts: num,
         group_name: group
     }
 
-    $.post(url, body, function (data, status) {
+    $.post(url, body, function (data, status) 
+    { 
         data = data.tags;
 
         console.log(data);
@@ -93,8 +98,10 @@ function getTags() {
 
         let result = "";
 
-        for (var element in data) {
-            if (data[element].groupData.group_name != "WhatsApp Crawler 2" && data[element].groupData.group_name != "הכרת מערכת הוואטסאפ") {
+        for (var element in data) 
+        {
+            if (data[element].groupData.group_name != "WhatsApp Crawler 2" && data[element].groupData.group_name != "הכרת מערכת הוואטסאפ")
+            {
                 // initialize
                 var dateString = msg = msg_id = sender_id = group_name = tags = tag = text = mark = text_probability = ref_msg_id = ref_msg_text = issue = receiver = status = "";
                 var ts = 0;
@@ -109,19 +116,13 @@ function getTags() {
                 ts = data[element].timeStamp;
                 date = new Date(ts);
                 // TODO: check it for diffrenet timezone
-                options = {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    timeZone: "Asia/Jerusalem"
-                };
+                options = {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',year:'numeric', timeZone:"Asia/Jerusalem"};
                 dateString = date.toLocaleString('he-IL', options);
 
                 tags = data[element].tags;
-                for (var n in tags) {
-                    tag += ",(" + tags[n].tag_Type + ")" + tags[n].tag;
+                for (var n in tags) 
+                {
+                    tag += ",("+tags[n].tag_Type+")"+tags[n].tag;
 
                     text = tags[n].text;
                     mark = `<span class="mark">${text}</span>`;
@@ -131,7 +132,8 @@ function getTags() {
                 }
 
                 //reference message
-                if (data[element].reference.ref_msg_id) {
+                if (data[element].reference.ref_msg_id)
+                {
                     ref_msg_id = data[element].reference.ref_msg_id;
                     ref_msg_text = data[element].reference.ref_txt;
                 }
@@ -140,25 +142,21 @@ function getTags() {
                 result += messageBuilder(msg, sender_id, group_name, tag, text_probability, msg_id, ref_msg_text, ref_msg_id, issue, receiver, status, dateString);
             }
         }
-        $(".messages-section").html(result);
+        $(".messages-section").html(result); 
         $(".loader_wrap").hide();
-    });
+    }); 
 }
 
-function getGroups() {
+function getGroups()
+{
     var groupsArray = [];
-
-    //read groups from groups.json
-    groupsArray = await Object.keys(
-        JSON.parse(fs.readFileSync(path.join(__dirname + groupsJsonFile), "utf8"))
-    );
-    //var data = ["מפעל ירושלים ושירות", "מפעל בתי חולים"];
-    for (var oneGroup of groupsArray)
+    var data = ["מפעל ירושלים ושירות","מפעל בתי חולים"];
+    for (var oneGroup of data)
         groupsArray.push(oneGroup);
 
     var options = '<option value="" disabled selected>בחר קבוצה</option>';
     for (var group of groupsArray)
-        options += '<option>' + group + '</option>';
+        options += '<option>'+group+'</option>';
 
     $(".select_group").html(options);
 
@@ -181,8 +179,9 @@ function getGroups() {
     });*/
 }
 
-function changeStyle() {
-    $(".csv_btn").css('box-shadow', '0 0 0 0 rgba(0,0,0,0)');
+function changeStyle()
+{
+    $(".csv_btn").css('box-shadow','0 0 0 0 rgba(0,0,0,0)');
 }
 
 $(".loader_wrap").hide();

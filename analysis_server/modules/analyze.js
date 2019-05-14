@@ -21,7 +21,7 @@ analyzeCall = function(msgData, issue_id, callbackRes) {
     group_name: msgData.group_name,
     description: msgData.msg,
     msg_id: msgData.msg_id,
-    status: "pendeing",
+    status: "pending",
     group_creation_time: msgData.group_creation_time,
     reference_msg_id: "",
     register_time: msgData.ts,
