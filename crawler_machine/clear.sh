@@ -20,7 +20,7 @@ for object in *; do
     # if this is a directory (not a file)
 	if [[ -d $object ]]; then
 
-        if [[ $object = "ea-sort.sh" ]]; then
+        if [[ $object = "clear.sh" ]]; then
 
 
         fi
