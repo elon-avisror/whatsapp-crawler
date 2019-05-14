@@ -43,7 +43,7 @@ function download_csv()
             var hiddenElement = document.createElement('a');
             hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
             hiddenElement.target = '_blank';
-            hiddenElement.download = 'unidress_validated_data.csv';
+            hiddenElement.download = 'wac_validated_data.csv';
             hiddenElement.click();
         },
         complete: () => $('#csv_btn').html('ייצוא דו"ח מידע מאושר')                

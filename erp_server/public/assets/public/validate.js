@@ -1,5 +1,3 @@
-
-//const URL = 'http://unidress.cambium.co.il:8080';
 const URL = 'http://wac.local:8080';
 
 function getQueryVariable(variable) {

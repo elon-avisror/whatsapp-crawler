@@ -20,7 +20,7 @@ function show_table() {
         return alert('בחר קבוצה');
 
     $('#show_btn').html('..מציג');
-    var url =  "http://unidress.cambium.co.il:8080/getValidated_data";
+    var url =  "http://wac.local:8080/getValidated_data";
     $.ajax({
         url: url,
         type: 'POST',
@@ -172,7 +172,7 @@ function download_csv()
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
     hiddenElement.target = '_blank';
-    hiddenElement.download = 'unidress_validated_data.csv';
+    hiddenElement.download = 'wac_validated_data.csv';
     hiddenElement.click();
     //complete: () => $('#csv_btn').html('ייצוא דו"ח מידע מאושר')
     $('#csv_btn').html('ייצא טבלה')
