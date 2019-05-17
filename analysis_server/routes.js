@@ -34,11 +34,15 @@ module.exports = function(app) {
   });
 
   app.get("/test", function(req, res, next) {
-    res.send("WAC says hi!");
+    res.send("hi");
   });
 
-  app.post("/getLastMsg", function(req, res, next) {
-    analysisApi.getLastMsg(req, res);
+  app.post("/setLastMsgTs", function(req, res, next) {
+    analysisApi.setLastMsgTs(req, res);
+  });
+
+  app.post("/getLastMsgTs", function(req, res, next) {
+    analysisApi.getLastMsgTs(req, res);
   });
 
   app.post("/changeGroupName", function(req, res, next) {

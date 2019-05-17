@@ -52,7 +52,7 @@ class DictionaryElement {
     var reg = this.getRegex();
     return reg.test(text);
   }
-  //creating 1 object with the relevant fildes
+  //creating 1 object with the relevant fields
   textToTags(text) {
     var msg = text.msg;
     var msg_id = text.msg_id;

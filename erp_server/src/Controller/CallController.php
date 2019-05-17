@@ -97,7 +97,7 @@ class CallController extends AbstractController
         //   $logger->info(sprintf('data: %s', $data));
         if (gettype($data['sender_id']) == 'string' && gettype($data['group_name']) == 'string' && gettype($data['msg']) == 'string' && gettype($data['msg_id']) == 'string' && gettype($data['reference_msg_id']) == 'string') {
             $call_id = $this->getIDByVariable(null, $data['reference_msg_id'], 'call');
-            if ($call_id == 'no_entity_found')  return new JsonResponse(array("error" => "no reference found"));
+            if ($call_id == 'no_entity_found')  return new JsonResponse(array("warning" => "no reference found", "data" => $data));
             //$groupId = $this->getIDByVariable($data['group_creation_time'],$data['group_name'],'group');
             $this->updateStatusTable($call_id, $data['status'], $data['timestamp']);
             $res = $this->updateMassageTable($call_id, $data['msg'], $data['timestamp'], $data['group_name'], $data['group_creation_time'], $data['msg_id'], $data['reference_msg_id'], $data['sender_id']);
@@ -157,18 +157,32 @@ class CallController extends AbstractController
     }
 
     /**
-     * @Route("call/getLastMsg", name="getLastMsg", methods={"POST"})
+     * @Route("call/setLastMsgTs", name="setLastMsgTs", methods={"POST"})
      */
-    public function getLastMsg(Request $request)
+    public function setLastMsgTs(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        $groupid = $this->getIDByVariable($data['group_creation_time'], $data['group'], 'group');
-        if ($groupid == 'no_entity_found')  return new JsonResponse(array("error" => "no such group found"));
-        $last_message_id = $this->getIDByVariable(null, $groupid, 'lastMsg');
-        $last_message_data = $this->getIDByVariable(null, $last_message_id, 'msg');
+        $groupId = $this->getIDByVariable($data['group_creation_time'], $data['group_name'], 'group');
+        if ($groupId == 'no_entity_found')  return new JsonResponse(array("error" => "no such group found"));
+        $res = $this->updateLastMsgTable($groupId, $data['timestamp']);
+        if ($res == false) return new JsonResponse(array("error" => "timestamp did not register"));
+        return new JsonResponse(array("message" => "last timestamp registered successfully"));
+    }
 
-        if (sizeof($last_message_data) > 0) {
-            return new JsonResponse(array("last_message" => $last_message_data));
+
+    /**
+     * @Route("call/getLastMsgTs", name="getLastMsgTs", methods={"POST"})
+     */
+    public function getLastMsgTs(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $groupid = $this->getIDByVariable($data['group_creation_time'], $data['group_name'], 'group');
+        if ($groupid == 'no_entity_found')  return new JsonResponse(array("error" => "no such group found"));
+        $last_message_ts = $this->getIDByVariable(null, $groupid, 'lastMsg');
+        // $last_message_data = $this->getIDByVariable(null,$last_message_id,'msg');
+
+        if ($last_message_ts > 0) {
+            return new JsonResponse(array("last_message_ts" => $last_message_ts));
         } else {
             return new JsonResponse(array("error" => "something went wrong"));
         }
@@ -226,8 +240,8 @@ class CallController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($msg);
             $entityManager->flush();
-            $messag_Table_id = $msg->getRowId();
-            $this->updateLastMsgTable($groupId, $messag_Table_id);
+            // $message_Table_id = $msg->getRowId();
+            // $this->updateLastMsgTable($groupId,$message_Table_id);
         } catch (\Error $e) {
             return new JsonResponse(array("error" => $e->getMessage()));
         }
@@ -235,13 +249,18 @@ class CallController extends AbstractController
         return $groupId;
     }
 
-    private function updateLastMsgTable($grp_id, $msg_id)
+    private function updateLastMsgTable($grp_id, $ts)
     {
-        $lastMsg = $this->getDoctrine()->getRepository(LastMsgPerGroup::class)->findOneBy(['groupId' => $grp_id]);
-        $lastMsg->setMsgid($msg_id);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($lastMsg);
-        $entityManager->flush();
+        try {
+            $lastMsg = $this->getDoctrine()->getRepository(LastMsgPerGroup::class)->findOneBy(['groupId' => $grp_id]);
+            $lastMsg->setTimestamp($ts);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($lastMsg);
+            $entityManager->flush();
+        } catch (\Error $e) {
+            return flase;
+        }
+        return true;
     }
 
     private function getIDByVariable($var_a, $var_b, $object)
@@ -272,7 +291,7 @@ class CallController extends AbstractController
         if ($entity != null) {
             if ($object == 'call') return  $entity->getCallId();
             if ($object == 'group') return  $entity->getGroupId();
-            if ($object == 'lastMsg') return  $entity->getMsgid();
+            if ($object == 'lastMsg') return  $entity->getTimestamp();
             if ($object == 'msg') return  array("message" => $entity->getMsg(), "Sender_id" => $entity->getSenderId(), "timestamp" => $entity->getTimestamp(), "msg_id" => $entity->getMsgId());
             if ($object == 'msgBYMsg_id') return  $entity->getMsgId();
         } else return 'no_entity_found';

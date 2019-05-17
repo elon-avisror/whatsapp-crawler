@@ -159,15 +159,39 @@ exports.changeGroupName = function(req, res) {
   var data = req.body;
 };
 
-exports.getLastMsg = function(req, res) {
+exports.getLastMsgTs = function(req, res) {
   var group_data = {
-    route: "call/getLastMsg",
-    group: req.body.group,
+    route: "call/getLastMsgTs",
+    group_name: req.body.group_name,
     group_creation_time: req.body.group_creation_time
   };
   //make http request
-  if (group_data.group != null && group_data.group_creation_time != null) {
+  if (group_data.group_name != null && group_data.group_creation_time != null) {
     httpSender.httpCall(group_data, function(ans) {
+      res.send(ans);
+    });
+  } else {
+    var error_msg = {
+      error: "some kind of problem. please check the data you send"
+    };
+    res.send(error_msg);
+  }
+};
+
+exports.setLastMsgTs = function(req, res) {
+  var ts_data = {
+    route: "call/setLastMsgTs",
+    group_name: req.body.group_name,
+    group_creation_time: req.body.group_creation_time,
+    timestamp: req.body.timestamp
+  };
+  //make http request
+  if (
+    ts_data.group_name != null &&
+    ts_data.group_creation_time != null &&
+    ts_data.timestamp != null
+  ) {
+    httpSender.httpCall(ts_data, function(ans) {
       res.send(ans);
     });
   } else {

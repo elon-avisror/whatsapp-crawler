@@ -22,11 +22,11 @@ class LastMsgPerGroup
     private $rowid;
 
     /**
-     * @var int
+     * @var float|null
      *
-     * @ORM\Column(name="msgId", type="integer", nullable=false)
+     * @ORM\Column(name="timestamp", type="float", precision=10, scale=0, nullable=true)
      */
-    private $msgid;
+    private $timestamp;
 
     /**
      * @var int
@@ -40,14 +40,14 @@ class LastMsgPerGroup
         return $this->rowid;
     }
 
-    public function getMsgid(): ?int
+    public function getTimestamp(): ?float
     {
-        return $this->msgid;
+        return $this->timestamp;
     }
 
-    public function setMsgid(int $msgid): self
+    public function setTimestamp(?float $timestamp): self
     {
-        $this->msgid = $msgid;
+        $this->timestamp = $timestamp;
 
         return $this;
     }

@@ -9,6 +9,7 @@ const EventEmitter = require("events");
 
 const DEBUG = true;
 const HOST = "127.0.0.1";
+const FIRST_TIME_GROUP = true;
 
 // hard coded strings and settings
 const searchbarSelector = ".jN-F5";
@@ -44,21 +45,20 @@ const browserHeight = 1080 / 1.5;
 const isheadless = false;
 const checkForNewMessages = true;
 const checkReferenceMessage = true;
-const defaultNewMessagesNumber = 0; //TODO: change to default = 0
+const defaultNewMessagesNumber = 0; // TODO: change to default = 0
 const groupsJsonFile = "/groups.json";
-const QRfileURL = "http://whatsapp-crawler.com/assets/QR.png";
+const QRfileURL = "http://wac.local/assets/QR.png";
 const senderEmail = "aelon@cambium.co.il";
 const senderPassword = "Elon9890";
 const toEmailAddress = "aelon@cambium.co.il";
-const sendAllGoodTo = "972503006092";
 const minute = 60000;
-const loopInterval = minute * 10; // every 10 minutes
-const waitBeforeCheckEmail = minute * 5; // 5 min
+const loopInterval = minute * 60; // every 10 minutes
+const waitBeforeCheckEmail = minute * 1; // 5 min
 
 class MyEmitter extends EventEmitter {}
 const myEmitter = new MyEmitter();
 
-//global variables
+// global variables
 var browser = {};
 var page = {};
 var flickEvent = {};
@@ -76,8 +76,8 @@ var groupsArray = [];
 
   // setting chrome environment
   const browserOptions = {
-    headless: isheadless, //so we can scan the QR code
-    userDataDir: path.join(__dirname + userDataLocation + num), //so we can save session data from one run to another. full path due to a bug in headlesschrome
+    headless: isheadless, // so we can scan the QR code
+    userDataDir: path.join(__dirname + userDataLocation + num), // so we can save session data from one run to another. full path due to a bug in headlesschrome
     args: ["--no-sandbox"]
   };
 
@@ -100,7 +100,7 @@ var groupsArray = [];
     if (DEBUG) console.log("loading " + whatsappWebDomain);
     await page.goto(whatsappWebDomain);
 
-    //wait for class that appears only when logged in
+    // wait for class that appears only when logged in
     await loginCheck();
 
     console.log("END. Closing browser");
@@ -115,9 +115,9 @@ async function loginCheck() {
     await page.waitFor(searchbarSelector, {
       timeout: 15000
     });
-    //TODO: add try-catch for error handling
-    //TODO: handle the case of "whatsapp is open in another window"
-    //TODO: send the QR screenshot so we can scan it headless
+    // TODO: add try-catch for error handling
+    // TODO: handle the case of "whatsapp is open in another window"
+    // TODO: send the QR screenshot so we can scan it headless
     if (DEBUG) console.log("logged-in");
 
     // Define a window.onCustomEvent function on the page.
@@ -135,17 +135,16 @@ async function loginCheck() {
         console.log("onCustomEvent already exist or error: " + e.message);
     }
 
-    //handle with dialog window for send validation links - leave site to send more messages
+    // handle with dialog window for send validation links - leave site to send more messages
     page.on("dialog", async dialog => {
       await dialog.accept();
     });
 
-    //read groups from groups.json
+    // read groups from groups.json
     groupsArray = await Object.keys(
       JSON.parse(fs.readFileSync(path.join(__dirname + groupsJsonFile), "utf8"))
     );
 
-    let counterForSend = 0;
     while (true) {
       // writes the date the reading start
       let date = new Date();
@@ -160,13 +159,6 @@ async function loginCheck() {
 
       // send validate messages
       await getValidationLinks();
-
-      //send whatsapp msg every 2 hours
-      counterForSend++;
-      if (counterForSend == 12) {
-        counterForSend = 0;
-        sendAllGood();
-      }
 
       await page.waitFor(loopInterval);
     }
@@ -206,7 +198,7 @@ async function sendEmail() {
   var mailOptions = {
     from: senderEmail,
     to: toEmailAddress,
-    subject: "Click on the link to login whatsApp",
+    subject: "Click on the link to login WhatsApp",
     text: QRfileURL
   };
 
@@ -220,15 +212,19 @@ async function sendEmail() {
 }
 
 async function readGroup(groupName) {
-  var promises = [];
   // triple click to select-all text in search bar
-  await page.click(searchbarSelector, { clickCount: 3 });
+  await page.click(searchbarSelector, {
+    clickCount: 3
+  });
+
   // search for group name
   await page.type(searchbarSelector, groupName);
   await page.waitFor(1000); // for typing to end
 
   try {
-    await page.waitFor(searchHeaderSelector, { timeout: 5000 }); // wait for search to be done. TODO: find more rubust way to check
+    await page.waitFor(searchHeaderSelector, {
+      timeout: 5000
+    }); // wait for search to be done. TODO: find more rubust way to check
 
     // click on the result to open group (// TODO: What if I have 2?)
     groupSelector = groupClassSelector + '[title*="' + groupName + '"]';
@@ -237,7 +233,9 @@ async function readGroup(groupName) {
 
     // click to scroll to buttom
     try {
-      await page.waitFor(scrollButtomSelector, { timeout: 3000 }); // TODO: add try-catch for error handling
+      await page.waitFor(scrollButtomSelector, {
+        timeout: 3000
+      }); // TODO: add try-catch for error handling
       await page.click(scrollButtomSelector);
     } catch (e) {
       if (DEBUG) console.log("already scrolled to bottom");
@@ -250,38 +248,47 @@ async function readGroup(groupName) {
 
     // read group created date
     let groupCreatedDateString;
-    await page.waitFor(groupCreatedDateSelector, { timeout: 10000 });
-    groupCreatedDateString = await page.$eval(
-      groupCreatedDateSelector,
-      e => e.innerText
-    );
-    groupCreatedDateString = await setDateToCorrectFormat(
-      groupCreatedDateString
-    );
+    if (groupName == "פאנדנגו נהגים") {
+      groupCreatedDateString = "08/04/2019 10:11";
+    } else {
+      await page.waitFor(groupCreatedDateSelector, {
+        timeout: 10000
+      });
+      groupCreatedDateString = await page.$eval(
+        groupCreatedDateSelector,
+        e => e.innerText
+      );
+      groupCreatedDateString = await setDateToCorrectFormat(
+        groupCreatedDateString
+      );
+    }
     if (DEBUG)
       await console.log(
         groupName + " creation date is " + groupCreatedDateString
       );
 
-    // get last message ts
-    var lastMessageData = await getLastMessage(
-      groupName,
-      groupCreatedDateString
-    );
-    if (!JSON.parse(lastMessageData).last_message_ts) {
-      if (DEBUG) console.log("error last message", lastMessageData);
-      return;
+    // get last message id
+    if (!FIRST_TIME_GROUP) {
+      var lastMessageData = await getLastMessage(
+        groupName,
+        groupCreatedDateString
+      );
+      if (!lastMessageData) {
+        if (DEBUG) console.log("last message don't exist");
+        return;
+      }
+      var lastMessage_id = JSON.parse(lastMessageData).last_message.msg_id;
     }
-    var lastMessage_ts = JSON.parse(lastMessageData).last_message_ts;
 
-    if (DEBUG) console.log("last message ts", lastMessage_ts);
+    // read relevant (last new) messages
+    let lastMessageFound = false;
+    let messagesEnvelope;
+    let counter = 0;
+    do {
+      counter++;
 
-    //read messages
-    let reach_last_ts = false;
-    let bottom_ts = lastMessage_ts;
-    let first_time = true;
-    while (!reach_last_ts) {
-      //catch messages
+      // read messages
+      if (DEBUG) console.log("read messages");
       const messagesList = await page.evaluateHandle(
         selector => document.getElementsByClassName(selector)[0].children,
         messagesListSelector
@@ -292,7 +299,6 @@ async function readGroup(groupName) {
         const element = property.asElement();
         if (element) messages.push(element);
       }
-      if (DEBUG) console.log("read messages");
 
       // delete management messages
       let managementIndexes = [];
@@ -307,33 +313,28 @@ async function readGroup(groupName) {
       }
       for (number in managementIndexes)
         await messages.splice(managementIndexes[number] - number, 1);
-      if (DEBUG) console.log("delete management messages");
 
-      //read messages from bottom
+      // generate messages enevelope
       messages = messages.reverse();
+      messagesEnvelope = [];
       for (element of messages) {
-        //generate message enevelope
+        // TODO: handle message in reply to another message
         let envelope = await generateMessageEnvelope(
           groupName,
           groupCreatedDateString
         );
 
-        //check timestamp of each message
-        if (envelope.msg_id && envelope.ts < lastMessage_ts) {
-          reach_last_ts = true;
-          break;
-    }
+        // check if it is the last message
+        if (!FIRST_TIME_GROUP) {
+          if (envelope.msg_id && envelope.msg_id == lastMessage_id) {
+            lastMessageFound = true;
+            break;
+          }
+        }
+
         if (envelope.msg_id) {
           // the message is text and wasn't deleted
-          //save timestamp of the bottom message
-          if (first_time) {
-            bottom_ts = envelope.ts;
-            first_time = false;
-          }
-
-          //send message
-          let p = sendMessage(envelope);
-          promises.push(p);
+          await messagesEnvelope.push(envelope);
         }
       }
 
@@ -341,38 +342,23 @@ async function readGroup(groupName) {
       await page.evaluate(selector => {
         document.querySelector(selector).scrollTo(0, 0);
       }, mainViewSelector);
-    }
+    } while (!FIRST_TIME_GROUP && !lastMessageFound && counter < 300);
 
-    //success - > update lastTimestamp with bottom_ts
-    try {
-      let sendMsgPromises = await Promise.all(promises);
-      let sendSuccess = true;
-      for (var res of sendMsgPromises) {
-        if (JSON.parse(res).warning) {
-          //message is comment
-          if (DEBUG) console.log("warning", JSON.parse(res).data);
-          //try send it one more time
-          let secondTimeP = await sendMessage(JSON.parse(res).data);
-          if (JSON.parse(secondTimeP).error) sendSuccess = false;
-        } else if (JSON.parse(res).error) {
-          sendSuccess = false;
-        }
-      }
-      if (sendSuccess)
-        await sendTs(groupName, groupCreatedDateString, bottom_ts);
-      else if (DEBUG) console.log("error in send messages");
-    } catch (error) {
-      if (DEBUG)
-        console.log("error in send messages to server or error: ", error);
+    if (counter >= 300) throw Error("last message id not found");
+
+    // pass messages
+    for (element of messagesEnvelope) {
+      await sendMessage(element);
     }
 
     if (DEBUG) console.log('group named:"' + groupName + '" read is done');
-
     // for testing:
     if (DEBUG) {
       await page.waitFor(2000);
       groupName = await groupName.replace(/\//g, ".");
-      await page.screenshot({ path: groupName + ".png" });
+      await page.screenshot({
+        path: groupName + ".png"
+      });
     }
   } catch (error) {
     if (DEBUG)
@@ -380,72 +366,14 @@ async function readGroup(groupName) {
   }
 }
 
-function sendTs(groupName, groupCreatedDateString, last_timestamp) {
-  let options = {
-    host: HOST,
-    path: "/setLastMsgTs",
-    method: "POST",
-    port: 8080,
-    headers: {
-      "Content-Type": "application/json"
-    },
-    rejectUnauthorized: false
-  };
-
-  let body = {
-    group_name: groupName,
-    group_creation_time: groupCreatedDateString,
-    timestamp: last_timestamp.toString()
-  };
-
-  var req = http.request(options, function(res) {
-    var responseString = "";
-
-    res.on("data", function(data) {
-      responseString += data;
-      // save all the data from response
-    });
-    res.on("end", function() {
-      if (DEBUG) console.log("set ts successfully to ", last_timestamp);
-      // print to console when response ends
-    });
-  });
-  req.on("error", function(err) {
-    if (DEBUG)
-      console.log("\x1b[31m\x1b[0m", "error on set ts or error: " + err);
-  });
-  req.write(JSON.stringify(body));
-  req.end();
-}
-
 async function setDateToCorrectFormat(groupCreatedDateString) {
   let timeArray = groupCreatedDateString.split(" ");
   let dateArray = timeArray[2].split("/");
 
-  let year, month, day, hour, minutes;
-  if ("אתמול" == dateArray[0]) {
-    var yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    year = yesterday.getFullYear();
-    month = yesterday.getMonth();
-    day = yesterday.getDate();
-    hour = timeArray[4].split(":")[0];
-    minutes = timeArray[4].split(":")[1];
-  } else if ("היום" == dateArray[0]) {
-    var today = new Date();
-    year = today.getFullYear();
-    month = today.getMonth();
-    day = today.getDate();
-    hour = timeArray[3].substr(2).split(":")[0];
-    minutes = timeArray[3].substr(2).split(":")[1];
-  } else {
-    year = dateArray[2];
-    month = dateArray[1] - 1;
-    day = dateArray[0];
-    hour = timeArray[3].substr(2).split(":")[0];
-    minutes = timeArray[3].substr(2).split(":")[1];
-  }
-  let date = new Date(year, month, day, hour, minutes);
+  let month = dateArray[1] - 1;
+  let hour = timeArray[3].substr(2).split(":")[0];
+  let minutes = timeArray[3].substr(2).split(":")[1];
+  let date = new Date(dateArray[2], month, dateArray[0], hour, minutes);
 
   // TODO: check it for diffrenet timezone
   groupCreatedDateString = dateFormat(
@@ -463,18 +391,18 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
   envelope.group_name = groupName;
   envelope.group_creation_time = groupCreatedDateString;
 
-  //check if the message has text and wasn't deleted
+  // check if the message has text and wasn't deleted
   try {
     await page.evaluate(
       (el, selector) => el.querySelector(selector).innerHTML,
       element,
       messageTopSelector
-    ); //message is just text
+    ); // message is just text
     await page.evaluate(
       (el, selector) => el.querySelector(selector).innerText,
       element,
       messageSelector
-    ); //massage wasn't deleted
+    ); // massage wasn't deleted
   } catch (e) {
     try /* picture */ {
       await page.evaluate(
@@ -494,6 +422,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
       }
     }
   }
+
   envelope.msg = await page.evaluate(getMessageText, element, msgTextSelector);
   let metadata = await page.evaluate(
     (el, selector) =>
@@ -501,6 +430,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     element,
     messageSelector
   );
+
   envelope.sender_id = metadata
     .replace(/ *\[[^\]]*]/g, "")
     .replace(/[^\d.+]/g, "");
@@ -510,7 +440,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     .update(envelope.msg + envelope.sender_id + envelope.ts)
     .digest("hex");
 
-  //response to message
+  // response to message
   envelope.reference_msg_id = "";
   if (checkReferenceMessage) {
     try {
@@ -557,7 +487,7 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     }
     await listenFor();
 
-    //find the element in the DOM
+    // find the element in the DOM
     var elementSelector = "[data-pre-plain-text = '" + metadata + "']";
     const currentElementOuterHTML = await page.evaluate(
       el => el.outerHTML,
@@ -569,13 +499,13 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
         currentElementOuterHTML
       );
     } catch (
-      e //not found
+      e // not found
     ) {
       if (DEBUG) console.log("\x1b[33m%s\x1b[0m", e.message);
       return envelope;
     }
 
-    //click on the inner message to cause the page move to the message first occurrence and to flicker
+    // click on the inner message to cause the page move to the message first occurrence and to flicker
     await page.evaluate(
       (el, selector) => el.querySelector(selector).click(),
       elementInDOM,
@@ -598,19 +528,19 @@ async function generateMessageEnvelope(groupName, groupCreatedDateString) {
     );
 
     if (!waitToFlickPromise) {
-      //not flick
+      // not flick
       if (DEBUG)
         console.log("\x1b[33m%s\x1b[0m", "reference message was deleted");
       return await envelope;
     }
 
-    //get inner message timestamp
+    // get inner message timestamp
     var innerMessageHTML = await flickEvent.target;
     var startIndex =
       (await innerMessageHTML.indexOf("data-pre-plain-text")) + 22;
     if (startIndex == 21) {
       return envelope;
-    } //the original message is not just text
+    } // the original message is not just text
     var endIndex = await innerMessageHTML.indexOf("]", startIndex);
     envelope.reference_msg_ts = await getMsgTimestamp(
       innerMessageHTML.substring(startIndex, endIndex)
@@ -634,29 +564,29 @@ async function getMessageText(el, selector) {
 
   let emojis = textElement.querySelectorAll("img");
   if (emojis.length == 0)
-    //no emojis
+    // no emojis
     message = textElement.innerText;
-  //there is emoji
+  // there is emoji
   else {
     let elementList = textElement.firstChild.childNodes;
     for (var child of elementList) {
       if (!child.tagName)
-        //TEXT
+        // TEXT
         message += child.textContent;
       else if (child.tagName == "IMG") {
         let emoji = child.getAttribute("alt");
 
         if (emoji == "👍" || emoji == "👍🏻")
-          //like yellow or light
+          // like yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e740-64.png' style='width:20px; height:20px'>";
         else if (emoji == "👎" || emoji == "👎🏻")
-          //dislike yellow or light
+          // dislike yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e746-64.png' style='width:20px; height:20px'>";
         else message += "<>";
       } else if (child.tagName == "SPAN") {
-        //the message is just 1 or 2 emojis
+        // the message is just 1 or 2 emojis
         let src = child.firstChild.getAttribute("src");
         message +=
           "<img src='https://web.whatsapp.com" +
@@ -666,7 +596,7 @@ async function getMessageText(el, selector) {
     }
   }
 
-  //multi line
+  // multi line
   message = message
     .replace(/\n\n/g, "\n")
     .replace(/ \n/g, "\n")
@@ -681,24 +611,24 @@ async function getInCommentText(el, selector) {
 
   let emojis = textElement.querySelectorAll("img");
   if (emojis.length == 0)
-    //no emojis
+    // no emojis
     message = textElement.innerText;
-  //there is emoji
+  // there is emoji
   else {
     let elementList = textElement.childNodes;
     for (var child of elementList) {
       if (!child.tagName)
-        //TEXT
+        // TEXT
         message += child.textContent;
       else if (child.tagName == "IMG") {
         let emoji = child.getAttribute("alt");
 
         if (emoji == "👍" || emoji == "👍🏻")
-          //like yellow or light
+          // like yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e740-64.png' style='width:20px; height:20px'>";
         else if (emoji == "👎" || emoji == "👎🏻")
-          //dislike yellow or light
+          // dislike yellow or light
           message +=
             "<img src='https://web.whatsapp.com/img/986449f2ab46622e888b7c1f2ce0c477_w_e746-64.png' style='width:20px; height:20px'>";
         else message += "<>";
@@ -706,7 +636,7 @@ async function getInCommentText(el, selector) {
     }
   }
 
-  //multi line
+  // multi line
   message = message
     .replace(/\n\n/g, "\n")
     .replace(/ \n/g, "\n")
@@ -733,9 +663,11 @@ async function getMsgTimestamp(metadata) {
 async function findElementInDOM(elementSelector, currentElementOuterHTML) {
   if (DEBUG) console.log("search element");
 
-  //click to scroll to buttom
+  // click to scroll to buttom
   try {
-    await page.waitFor(scrollButtomSelector, { timeout: 3000 }); //TODO: add try-catch for error handling
+    await page.waitFor(scrollButtomSelector, {
+      timeout: 3000
+    }); // TODO: add try-catch for error handling
     await page.click(scrollButtomSelector);
   } catch (e) {
     if (DEBUG) console.log("already scrolled to bottom");
@@ -763,7 +695,7 @@ async function findElementInDOM(elementSelector, currentElementOuterHTML) {
       }
     }
 
-    //scroll up to get more messages
+    // scroll up to get more messages
     await page.evaluate(selector => {
       document.querySelector(selector).scrollTo(0, 0);
     }, mainViewSelector);
@@ -779,7 +711,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
   var p = new Promise((resolve, reject) => {
     let options = {
       host: HOST,
-      path: "/getLastMsgTs",
+      path: "/getLastMsg",
       method: "POST",
       port: 8080,
       headers: {
@@ -788,7 +720,7 @@ async function getLastMessage(groupName, groupCreatedDateString) {
       rejectUnauthorized: false
     };
     var body = {
-      group_name: groupName,
+      group: groupName,
       group_creation_time: groupCreatedDateString
     };
     var req = http.request(options, function(res) {
@@ -820,70 +752,39 @@ async function getLastMessage(groupName, groupCreatedDateString) {
   return responseString;
 }
 
-function sendMessage(json) {
-  return new Promise(function(resolve, reject) {
-    //TODO: create new group when the group unknown
-    let options = {
-      host: HOST,
-      path: "/classifyMsg",
-      method: "POST",
-      port: 8080,
-      headers: {
-        "Content-Type": "application/json"
-      },
-      rejectUnauthorized: false
-    };
-    var req = http.request(options, function(res) {
-      var responseString = "";
+async function sendMessage(json) {
+  // TODO: create new group when the group unknown
+  let options = {
+    host: HOST,
+    path: "/classifyMsg",
+    method: "POST",
+    port: 8080,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    rejectUnauthorized: false
+  };
+  var req = http.request(options, function(res) {
+    var responseString = "";
 
-      res.on("data", function(data) {
-        responseString += data;
-        // save all the data from response
-      });
-      res.on("end", function() {
-        resolve(responseString);
-        console.log(responseString);
-        // print to console when response ends
-      });
+    res.on("data", function(data) {
+      responseString += data;
+      // save all the data from response
     });
-    req.on("error", function(err) {
-      resolve(err);
-      if (DEBUG)
-        console.log(
-          "\x1b[31m\x1b[0m",
-          "reference message not found in DB or error: " + err
-        );
+    res.on("end", function() {
+      console.log(responseString);
+      // print to console when response ends
     });
-    req.write(JSON.stringify(json));
-    req.end();
   });
-}
-
-async function sendAllGood() {
-  //got to send message link
-  await page.goto(sendWhatsappWeb + sendAllGoodTo);
-  try {
-    //wait for class that appears only when the navigation into chat success
-    await page.waitFor(typeMessageSelector, { timeout: 15000 });
-
-    //typing the message
-    await page.click(typeMessageSelector, { clickCount: 3 });
-    await page.type(
-      typeMessageSelector,
-      "all good! the crawler runs perfect:)"
-    );
-
-    //send it
-    try {
-      await page.waitFor(linkSelector, { timeout: 5000 }); //TODO: check the selector
-    } catch (e) {}
-    await page.click(sendMessageSelector);
-
-    if (DEBUG) await console.log("messaege send to ", sendAllGoodTo);
-  } catch (e) {
+  req.on("error", function(err) {
     if (DEBUG)
-      console.log("error during sending all good msg. error: " + e.message);
-  }
+      console.log(
+        "\x1b[31m\x1b[0m",
+        "reference message not found in DB or error: " + err
+      );
+  });
+  req.write(JSON.stringify(json));
+  req.end();
 }
 
 async function getValidationLinks() {
@@ -892,7 +793,7 @@ async function getValidationLinks() {
         await dialog.accept();
     }); */
 
-  //request - get validation links and phone numbers
+  // request - get validation links and phone numbers
   let options = {
     host: HOST,
     path: "/getValidationLinks",
@@ -912,7 +813,7 @@ async function getValidationLinks() {
       validationLinks = JSON.parse(validationLinks);
 
       for (var message of validationLinks) {
-        //got to send message link
+        // got to send message link
         await page.goto(sendWhatsappWeb + message.sendto.substr(1));
         try {
           /* //wait for class that appears only when navigate success
@@ -921,16 +822,22 @@ async function getValidationLinks() {
                
                     await page.click(messageButtonSelector);*/
 
-          //wait for class that appears only when the navigation into chat success
-          await page.waitFor(typeMessageSelector, { timeout: 15000 });
+          // wait for class that appears only when the navigation into chat success
+          await page.waitFor(typeMessageSelector, {
+            timeout: 15000
+          });
 
-          //typing the message
-          await page.click(typeMessageSelector, { clickCount: 3 });
+          // typing the message
+          await page.click(typeMessageSelector, {
+            clickCount: 3
+          });
           await page.type(typeMessageSelector, message.link);
 
-          //send it
+          // send it
           try {
-            await page.waitFor(linkSelector, { timeout: 5000 }); //TODO: check the selector
+            await page.waitFor(linkSelector, {
+              timeout: 5000
+            }); //TODO: check the selector
           } catch (e) {}
           await page.click(sendMessageSelector);
 
@@ -958,7 +865,7 @@ async function getValidationLinks() {
 async function readMessagesAccordingToNewMessagesNumber(groupName) {
   let newMessagesNumber = defaultNewMessagesNumber;
   if (checkForNewMessages) {
-    //check if there are new messages
+    // check if there are new messages
     let newMessagesIcon = await page.$(rightBarUnreadMessagesSelector);
     if (newMessagesIcon)
       newMessagesNumber = await page.$eval(
