@@ -276,12 +276,17 @@ async function readGroup(groupName) {
 
     if (DEBUG) console.log("last message ts", lastMessage_ts);
 
-    //read messages
+    // read messages
     let reach_last_ts = false;
     let bottom_ts = lastMessage_ts;
     let first_time = true;
+    let while_cnt = 0;
+
     while (!reach_last_ts) {
-      //catch messages
+
+      while_cnt++;
+
+      // catch messages
       const messagesList = await page.evaluateHandle(
         selector => document.getElementsByClassName(selector)[0].children,
         messagesListSelector
@@ -309,29 +314,31 @@ async function readGroup(groupName) {
         await messages.splice(managementIndexes[number] - number, 1);
       if (DEBUG) console.log("delete management messages");
 
-      //read messages from bottom
+      // read messages from bottom
       messages = messages.reverse();
       for (element of messages) {
-        //generate message enevelope
+
+        // generate message enevelope
         let envelope = await generateMessageEnvelope(
           groupName,
           groupCreatedDateString
         );
 
-        //check timestamp of each message
-        if (envelope.msg_id && envelope.ts < lastMessage_ts) {
+        // check timestamp of each message
+        if (envelope.msg_id && envelope.ts < lastMessage_ts || while_cnt > 5) {
           reach_last_ts = true;
           break;
-    }
+        }
+
         if (envelope.msg_id) {
           // the message is text and wasn't deleted
-          //save timestamp of the bottom message
+          // save timestamp of the bottom message
           if (first_time) {
             bottom_ts = envelope.ts;
             first_time = false;
           }
 
-          //send message
+          // send message
           let p = sendMessage(envelope);
           promises.push(p);
         }
