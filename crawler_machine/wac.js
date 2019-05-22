@@ -41,7 +41,7 @@ const sendMessageSelector = "._35EW6";
 const linkSelector = '[class = grGJn][style = "height: 88px;"]';
 const browserWidth = 1920 / 1.5;
 const browserHeight = 1080 / 1.5;
-const isheadless = false;
+const isheadless = true;
 const checkForNewMessages = true;
 const checkReferenceMessage = true;
 const defaultNewMessagesNumber = 0; //TODO: change to default = 0
