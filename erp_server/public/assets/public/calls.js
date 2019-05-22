@@ -134,7 +134,7 @@ function addAllColumnHeaders(myList, selector) {
 function getGroups()
 {
     var groupsArray = [];
-    var data = ["מפעל ירושלים ושירות","מפעל בתי חולים"];
+    var data = ["WAC","WhatsApp Crawler", "Demo"];
     for (var oneGroup of data)
         groupsArray.push(oneGroup);
 

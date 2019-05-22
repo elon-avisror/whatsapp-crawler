@@ -169,7 +169,8 @@ module.exports = class Dictionary {
     var arr = [];
     for (var i = 0; i < this.arr.length; i++) {
       var tag = this.arr[i];
-      let inarr = tag.textToTags(text);
+      if (text !== undefined)
+        var inarr = tag.textToTags(text);
       arr.push.apply(arr, inarr);
     }
     return arr;
