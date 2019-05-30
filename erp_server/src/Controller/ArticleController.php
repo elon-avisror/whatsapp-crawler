@@ -44,7 +44,7 @@ class ArticleController
             </style>
 
             <div class="my_content_container">
-                <a href="http://whatsapp-crawler/assets/views/index.html">Click</a>
+                <a href="http://whatsapp-crawler.com/assets/views/index.html">Click</a>
             </div>
         </body>
         </html>');

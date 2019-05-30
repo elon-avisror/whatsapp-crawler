@@ -58,7 +58,7 @@ On air, we use pm2 (as service for all servers and machines)
     - sudo cp 000-default.conf wac.conf
     - sudo nano wac.conf (and edit to):
 
-            <VirtualHost \*:80>
+            <VirtualHost *:80>
 
                  ServerName wac.local
                  ServerAdmin webmaster@localhost

@@ -1,4 +1,6 @@
 {
+    "name": "wac",
+    "description": "final-project",
     "type": "project",
     "license": "proprietary",
     "require": {

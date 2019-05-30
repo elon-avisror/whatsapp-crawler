@@ -64,5 +64,4 @@ class LastMsgPerGroup
         return $this;
     }
 
-
 }

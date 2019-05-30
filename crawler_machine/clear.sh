@@ -1,8 +1,6 @@
 #!/bin/bash
 
 existed_directories=() # empty list of directories
-object_suffix=""
-flag=0
 counter=0
 
 for object in *; do
@@ -12,20 +10,24 @@ for object in *; do
 
         # add directory to the list of existed directories
         existed_directories+=($object)
+        counter=`echo "$counter + 1" | bc`
     fi
+
 done
 
-for object in *; do
+# remove the last object
+unset 'existed_directories[${#existed_directories[@]}-1]'
+counter=`echo "$counter - 1" | bc`
 
-    # if this is a directory (not a file)
-	if [[ -d $object ]]; then
+echo ${existed_directories[@]}
+#echo ${existed_directories[-1]}
 
-        if [[ $object = "clear.sh" ]]; then
+for object in ${existed_directories[@]}; do
 
+    # reomve archive directory
+    rm -R $object
 
-        fi
-    fi
 done
 
-# report of the number of files that where transport
-echo "The number of files that have been oredered: $counter"
+# report the number of directories deleted
+echo "The number of directories deleted: $counter"
