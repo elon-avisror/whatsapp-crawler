@@ -151,7 +151,7 @@ async function loginCheck() {
 
       // production
       if (isheadless)
-        date.setHours((date.getHours()+7)%24);
+        date.setHours((date.getHours()+3)%24);
       if (DEBUG) console.log("reading start at " + date.toString());
 
       // read groups 
@@ -172,7 +172,7 @@ async function loginCheck() {
 
       // production
       if (isheadless)
-        date.setHours((date.getHours()+7)%24);
+        date.setHours((date.getHours()+3)%24);
 
       await console.log("\x1b[36m%s\x1b[0m", "now " + date.toString() + "!\ni'm going to sleep for 10 minutes...");
       await page.waitFor(loopInterval);
