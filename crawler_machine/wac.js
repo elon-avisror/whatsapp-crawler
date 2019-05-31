@@ -167,7 +167,7 @@ async function loginCheck() {
       await getValidationLinks(counterForSend);
 
       date = new Date();
-      let zone = date.getTimezoneOffset();
+      zone = date.getTimezoneOffset();
       date.setHours((date.getHours()+(-1)*zone)%24);
 
       console.log("now " + date.toString() + "!\ni'm going to sleep for 10 minutes...");
