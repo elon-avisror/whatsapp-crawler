@@ -1,5 +1,5 @@
 
-const URL = 'http://wac.local:8080';
+const URL = 'http://whatsapp-crawler.com:8080';
 
 function getQueryVariable(variable) {
     var query = window.location.search.substring(1);
