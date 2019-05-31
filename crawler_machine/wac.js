@@ -168,13 +168,6 @@ async function loginCheck() {
       // send validate messages
       await getValidationLinks(counterForSend);
 
-      date = new Date();
-
-      // production
-      if (isheadless)
-        date.setHours((date.getHours()+3)%24);
-
-      await console.log("\x1b[36m%s\x1b[0m", "now " + date.toString() + ", i'm going to sleep for 10 minutes...");
       await page.waitFor(loopInterval);
     }
   } catch (e) {
@@ -822,6 +815,14 @@ async function getValidationLinks(counterForSend) {
         }
       }
       if (DEBUG) await console.log("\x1b[36m%s\x1b[0m", 'all validation links were sent');
+
+      let date = new Date();
+
+      // production
+      if (isheadless)
+        date.setHours((date.getHours()+3)%24);
+        
+      await console.log("\x1b[36m%s\x1b[0m", "now " + date.toString() + ", i'm going to sleep for 10 minutes...");
     });
     res.on("error", (e) => { console.log("\x1b[33m%s\x1b[0m", 'error in get validation link ', e); });
   });
