@@ -485,7 +485,6 @@ class AdminController extends AbstractController
      */
     function getTags(Request $request)
     {
-
         $data = json_decode($request->getContent(), true);
         $tags = $this->getTagsData($data['ts'], $data['group_name']);
         if ($tags == 'no_entity_found')  return new JsonResponse(array("message" => 'no such group found'));
