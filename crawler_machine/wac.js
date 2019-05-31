@@ -135,18 +135,21 @@ async function loginCheck() {
       if (DEBUG) console.log('onCustomEvent already exist or error: ' + e.message);
     }
 
-    //handle with dialog window for send validation links - leave site to send more messages
+    // handle with dialog window for send validation links - leave site to send more messages
     page.on('dialog', async dialog => {
       await dialog.accept();
     });
 
-    //read groups from groups.json
+    // read groups from groups.json
     groupsArray = await Object.keys(JSON.parse(fs.readFileSync(path.join(__dirname + groupsJsonFile), 'utf8')));
 
     let counterForSend = 0;
     while (true) {
+
       // writes the date the reading start
       let date = new Date();
+      let zone = date.getTimezoneOffset();
+      date.setHours((date.getHours()+(-1)*zone)%24);
       if (DEBUG) console.log("reading start at " + date.toString());
 
       // read groups 
@@ -163,6 +166,11 @@ async function loginCheck() {
       // send validate messages
       await getValidationLinks(counterForSend);
 
+      let date = new Date();
+      let zone = date.getTimezoneOffset();
+      date.setHours((date.getHours()+(-1)*zone)%24);
+
+      console.log("now " + date.toString() + "!\ni'm going to sleep for 10 minutes...");
       await page.waitFor(loopInterval);
     }
   } catch (e) {

@@ -26,7 +26,7 @@ class ArticleController
             <title>WAC Home Page</title>
         </head>
         <body>
-            <h1>WAC online<h1>
+            <h1>WAC Online<h1>
             <style type="text/css">
                 .my_content_container a {
                 border-bottom: 1px solid #777777;

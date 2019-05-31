@@ -166,7 +166,7 @@ hr {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #f79892;
+  background: #4DC2A0;
   margin: -3px 0 0 -3px;
 }
 .loader div:nth-child(1) {
@@ -276,7 +276,7 @@ details p.message {
 }
 
 details .mark {
-  background-color: #f79892;
+  background-color: #92f7a0;
   padding:1px;
 }
 
@@ -302,7 +302,7 @@ details .mark {
 .topnav {
   overflow: hidden;
   background-color: #C9C9C9;
-  background-image: url("../views/Cambium.jpg");
+  background-image: url("../views/Logo.png");
   background-repeat: no-repeat;
   background-position: left;
   background-size: contain;
@@ -354,7 +354,7 @@ nav{
     width:230px;
     margin-top: auto;
     margin-bottom: 5px;
-    border: 2px solid rgba(176,30,50,.7);
+    border: 2px solid #4DC2A0;
     border-right: 0px ;
     text-align: center;
 }
@@ -406,7 +406,7 @@ nav{
     margin-right: 10px;
     margin-bottom: 5px;
     border: none;
-    border-bottom: 2px solid rgba(176,30,50,.7);
+    border-bottom: 2px solid #4DC2A0;
     padding-right: 5px;
     background-color: white;
     direction: rtl;
