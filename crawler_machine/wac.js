@@ -174,7 +174,7 @@ async function loginCheck() {
       if (isheadless)
         date.setHours((date.getHours()+3)%24);
 
-      await console.log("\x1b[36m%s\x1b[0m", "now " + date.toString() + "!\ni'm going to sleep for 10 minutes...");
+      await console.log("\x1b[36m%s\x1b[0m", "now " + date.toString() + ", i'm going to sleep for 10 minutes...");
       await page.waitFor(loopInterval);
     }
   } catch (e) {
