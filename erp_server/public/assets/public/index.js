@@ -1,5 +1,5 @@
-const URL = 'http://whatsapp-crawler.com:8080';
-//const URL = 'http://wac.local:8080';  // download_to_csv
+//const URL = 'http://whatsapp-crawler.com:8080';
+const URL = 'http://wac.local:8080';  // download_to_csv
 //const num = new Date().getTime() - 1000 * 60 * 60;
 const num = 20;
 console.log("num = " + num);
