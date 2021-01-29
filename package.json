@@ -6,7 +6,7 @@
   "dependencies": {
     "dateformat": "^3.0.3",
     "express": "^4.16.4",
-    "nodemailer": "^6.1.1",
+    "nodemailer": "^6.4.17",
     "pm2": "^3.5.0",
     "puppeteer": "^1.15.0",
     "request": "^2.88.0"
