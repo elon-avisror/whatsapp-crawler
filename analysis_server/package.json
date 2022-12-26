@@ -12,7 +12,7 @@
   "author": "EA & MA",
   "license": "ISC",
   "dependencies": {
-    "config": "^3.1.0",
+    "config": "^3.3.1",
     "express": "^4.16.4",
     "request": "^2.88.0"
   }
